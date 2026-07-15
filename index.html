@@ -1,1 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CampCheck</title>
 
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background:#f5f5f5;
+  margin:0;
+  padding:20px;
+}
+
+h1 {
+  text-align:center;
+}
+
+.card {
+  background:white;
+  padding:20px;
+  border-radius:15px;
+  margin-bottom:20px;
+  box-shadow:0 2px 8px rgba(0,0,0,0.1);
+}
+
+button {
+  width:100%;
+  padding:15px;
+  margin:8px 0;
+  border:none;
+  border-radius:10px;
+  font-size:18px;
+  cursor:pointer;
+}
+
+.main {
+  background:#2d6a4f;
+  color:white;
+}
+
+.item {
+  font-size:18px;
+  padding:10px;
+}
+
+.progress {
+  margin-top:15px;
+  font-weight:bold;
+}
+
+.hidden {
+  display:none;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🚐 CampCheck</h1>
+
+<div id="home" class="card">
+<h2>Your Checklists</h2>
+
+<button class="main" onclick="openList('caravan')">
+🚐 Caravan
+</button>
+
+<button class="main" onclick="openList('tent')">
+⛺ Tent
+</button>
+
+</div>
+
+
+<div id="list" class="card hidden">
+
+<h2 id="title"></h2>
+
+<div id="items"></div>
+
+<div class="progress" id="progress"></div>
+
+<button onclick="resetList()">🔄 Reset Checklist</button>
+
+<button onclick="goHome()">⬅ Home</button>
+
+</div>
+
+
+<script>
+
+const defaultLists = {
+
+caravan:[
+"Hitch locked",
+"Breakaway cable attached",
+"Jockey wheel raised",
+"Corner steadies raised",
+"Electric hook-up disconnected",
+"Water disconnected",
+"Windows closed",
+"Roof lights closed",
+"Fridge secured",
+"Cupboards secured",
+"Step stored",
+"Doors locked"
+],
+
+tent:[
+"Tent",
+"Pegs",
+"Mallet",
+"Sleeping bags",
+"Air beds",
+"Pump",
+"Chairs",
+"Table",
+"Stove",
+"Gas",
+"Cooking equipment",
+"Food"
+]
+
+};
+
+
+let current="";
+
+
+function openList(type){
+
+current=type;
+
+document.getElementById("home").classList.add("hidden");
+document.getElementById("list").classList.remove("hidden");
+
+document.getElementById("title").innerHTML=
+type=="caravan" ? "🚐 Caravan" : "⛺ Tent";
+
+showItems();
+
+}
+
+
+function getData(){
+
+let saved=localStorage.getItem(current);
+
+if(saved){
+return JSON.parse(saved);
+}
+
+return defaultLists[current].map(x=>({
+name:x,
+done:false
+}));
+
+}
+
+
+function saveData(data){
+
+localStorage.setItem(current,JSON.stringify(data));
+
+}
+
+
+function showItems(){
+
+let data=getData();
+
+let html="";
+
+data.forEach((item,index)=>{
+
+html+=`
+<div class="item">
+<input type="checkbox"
+${item.done?"checked":""}
+onclick="toggle(${index})">
+
+${item.name}
+
+</div>
+`;
+
+});
+
+
+document.getElementById("items").innerHTML=html;
+
+
+let complete=data.filter(x=>x.done).length;
+
+document.getElementById("progress").innerHTML=
+"Progress: "+complete+" / "+data.length;
+
+}
+
+
+function toggle(i){
+
+let data=getData();
+
+data[i].done=!data[i].done;
+
+saveData(data);
+
+showItems();
+
+}
+
+
+function resetList(){
+
+let data=getData();
+
+data.forEach(x=>x.done=false);
+
+saveData(data);
+
+showItems();
+
+}
+
+
+function goHome(){
+
+document.getElementById("home").classList.remove("hidden");
+document.getElementById("list").classList.add("hidden");
+
+}
+
+</script>
+
+</body>
+</html>
