@@ -4,9 +4,9 @@ function Layout() {
   return (
     <div className="app-layout">
       <header className="app-header">
-  <h1>CampCheck</h1>
-  <p>Your camping companion</p>
-</header>
+        <h1>CampCheck</h1>
+        <p>Your camping companion</p>
+      </header>
 
       <main className="app-content">
         <Outlet />
@@ -14,8 +14,8 @@ function Layout() {
 
       <nav className="bottom-nav">
         <NavLink to="/">🏠 Home</NavLink>
+        <NavLink to="/trips">🏕️ Trips</NavLink>
         <NavLink to="/caravan">🚐 Caravan</NavLink>
-        <NavLink to="/shopping">🛒 Shopping</NavLink>
         <NavLink to="/notes">📝 Notes</NavLink>
         <NavLink to="/settings">⚙️ Settings</NavLink>
       </nav>

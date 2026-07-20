@@ -6,12 +6,15 @@ import Home from "./pages/Home";
 import Caravan from "./pages/Caravan";
 import Departure from "./pages/Departure";
 import Arrival from "./pages/Arrival";
+import Trips from "./pages/Trips";
 
 function App() {
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route index element={<Home />} />
+
+        <Route path="trips" element={<Trips />} />
 
         <Route path="caravan" element={<Caravan />} />
         <Route path="caravan/departure" element={<Departure />} />
