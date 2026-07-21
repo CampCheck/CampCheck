@@ -15,6 +15,14 @@ function Trips() {
     setTrips(savedTrips);
   }, []);
 
+  function formatDate(date) {
+    return new Date(date).toLocaleDateString("en-GB", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
+  }
+
   return (
     <div className="container">
       <h2>🏕️ Upcoming Trips</h2>
@@ -34,14 +42,13 @@ function Trips() {
               marginBottom: "15px",
               cursor: "pointer",
             }}
-            onClick={() => navigate(`/trips/${trip.id}`)}
           >
-            <h3>🏕️ {trip.campsite}</h3>
+            <h3>{trip.campsite}</h3>
 
             <p>📍 {trip.town}</p>
 
             <p>
-              📅 {trip.arrival} → {trip.departure}
+              📅 {formatDate(trip.arrival)} – {formatDate(trip.departure)}
             </p>
           </div>
         ))

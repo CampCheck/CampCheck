@@ -22,25 +22,26 @@ function Home() {
     async function loadData() {
       const trips = JSON.parse(localStorage.getItem("trips")) || [];
 
-      if (trips.length === 0) return;
+      if (trips.length > 0) {
+        trips.sort((a, b) => new Date(a.arrival) - new Date(b.arrival));
 
-      trips.sort((a, b) => new Date(a.arrival) - new Date(b.arrival));
+        const nextTrip = trips[0];
+        setTrip(nextTrip);
 
-      const nextTrip = trips[0];
-      setTrip(nextTrip);
+        if (nextTrip.town) {
+          try {
+            setLoadingWeather(true);
+            setWeatherError(false);
 
-      if (!nextTrip.town) return;
-
-      try {
-        setLoadingWeather(true);
-        setWeatherError(false);
-
-        const result = await getWeather(nextTrip.town);
-        setWeather(result);
-      } catch (error) {
-        setWeatherError(true);
-      } finally {
-        setLoadingWeather(false);
+            const result = await getWeather(nextTrip.town);
+            setWeather(result);
+          } catch (error) {
+            console.error(error);
+            setWeatherError(true);
+          } finally {
+            setLoadingWeather(false);
+          }
+        }
       }
     }
 
@@ -48,6 +49,8 @@ function Home() {
   }, []);
 
   function daysUntil(date) {
+    if (!date) return null;
+
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
@@ -92,7 +95,10 @@ function Home() {
       </div>
 
       {trip ? (
-        <div className="card trip" onClick={() => navigate("/trips")}>
+        <div
+          className="card trip"
+          onClick={() => navigate("/trips")}
+        >
           <div className="card-header">
             <h3>
               <FaCalendarAlt className="card-icon" />
@@ -109,7 +115,9 @@ function Home() {
             {trip.town}
           </p>
 
-          <p>{formatDate(trip.arrival)} – {formatDate(trip.departure)}</p>
+          <p>
+            {formatDate(trip.arrival)} – {formatDate(trip.departure)}
+          </p>
 
           <p>
             <strong>{daysUntil(trip.arrival)} days to go</strong>

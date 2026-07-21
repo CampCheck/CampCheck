@@ -5,6 +5,7 @@
 }
 
 .dashboard .card {
+  position: relative;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 18px;
@@ -22,8 +23,6 @@
   transform: translateY(-3px);
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
 }
-
-/* Header */
 
 .card-header {
   position: relative;
@@ -63,16 +62,6 @@
 .trip .card-icon {
   color: #4caf50;
 }
-
-.tasks .card-icon {
-  color: #ff9800;
-}
-
-.notes .card-icon {
-  color: #9c27b0;
-}
-
-/* Body */
 
 .dashboard .card h3:not(.card-header h3) {
   text-align: center;
