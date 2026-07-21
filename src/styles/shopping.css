@@ -1,0 +1,97 @@
+.shopping-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.shopping-add {
+  display: flex;
+  gap: 10px;
+}
+
+.shopping-add input {
+  flex: 1;
+  padding: 14px;
+  border: none;
+  border-radius: 10px;
+  background: #2d2d2d;
+  color: white;
+  font-size: 16px;
+}
+
+.shopping-add input::placeholder {
+  color: #999;
+}
+
+.shopping-add button {
+  padding: 14px 22px;
+  border: none;
+  border-radius: 10px;
+  background: #3b82f6;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.shopping-add button:hover {
+  background: #2563eb;
+}
+
+.shopping-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.shopping-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #2d2d2d;
+  padding: 16px;
+  border-radius: 12px;
+}
+
+.shopping-item label {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex: 1;
+  cursor: pointer;
+}
+
+.shopping-item input[type="checkbox"] {
+  width: 22px;
+  height: 22px;
+}
+
+.shopping-item span {
+  font-size: 17px;
+}
+
+.shopping-item.checked span {
+  text-decoration: line-through;
+  opacity: 0.5;
+}
+
+.delete-btn {
+  border: none;
+  background: transparent;
+  color: #ff5c5c;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.empty {
+  text-align: center;
+  color: #999;
+  padding: 30px;
+}
+
+.shopping-footer {
+  text-align: center;
+  font-weight: 600;
+  color: #bbb;
+  padding: 10px;
+}

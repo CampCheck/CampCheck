@@ -1,68 +1,58 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Trips() {
-  const [destination, setDestination] = useState("");
-  const [campsite, setCampsite] = useState("");
-  const [arrival, setArrival] = useState("");
-  const [departure, setDeparture] = useState("");
+  const navigate = useNavigate();
+  const [trips, setTrips] = useState([]);
 
   useEffect(() => {
-    const saved = JSON.parse(localStorage.getItem("nextTrip"));
+    const savedTrips = JSON.parse(localStorage.getItem("trips")) || [];
 
-    if (saved) {
-      setDestination(saved.destination || "");
-      setCampsite(saved.campsite || "");
-      setArrival(saved.arrival || "");
-      setDeparture(saved.departure || "");
-    }
+    savedTrips.sort(
+      (a, b) => new Date(a.arrival) - new Date(b.arrival)
+    );
+
+    setTrips(savedTrips);
   }, []);
-
-  function saveTrip() {
-    const trip = {
-      destination,
-      campsite,
-      arrival,
-      departure,
-    };
-
-    localStorage.setItem("nextTrip", JSON.stringify(trip));
-
-    alert("✅ Trip saved!");
-  }
 
   return (
     <div className="container">
-      <h2>🏕️ Next Trip</h2>
+      <h2>🏕️ Upcoming Trips</h2>
 
-      <label>Destination</label>
-      <input
-        type="text"
-        value={destination}
-        onChange={(e) => setDestination(e.target.value)}
-      />
+      <p>Your upcoming camping adventures.</p>
 
-      <label>Campsite</label>
-      <input
-        type="text"
-        value={campsite}
-        onChange={(e) => setCampsite(e.target.value)}
-      />
+      {trips.length === 0 ? (
+        <div className="card trip">
+          <p>No trips added yet.</p>
+        </div>
+      ) : (
+        trips.map((trip) => (
+          <div
+            key={trip.id}
+            className="card trip"
+            style={{
+              marginBottom: "15px",
+              cursor: "pointer",
+            }}
+            onClick={() => navigate(`/trips/${trip.id}`)}
+          >
+            <h3>🏕️ {trip.campsite}</h3>
 
-      <label>Arrival Date</label>
-      <input
-        type="date"
-        value={arrival}
-        onChange={(e) => setArrival(e.target.value)}
-      />
+            <p>📍 {trip.town}</p>
 
-      <label>Departure Date</label>
-      <input
-        type="date"
-        value={departure}
-        onChange={(e) => setDeparture(e.target.value)}
-      />
+            <p>
+              📅 {trip.arrival} → {trip.departure}
+            </p>
+          </div>
+        ))
+      )}
 
-      <button onClick={saveTrip}>💾 Save Trip</button>
+      <button
+        style={{ marginTop: "20px" }}
+        onClick={() => navigate("/trips/new")}
+      >
+        ➕ Add Trip
+      </button>
     </div>
   );
 }
