@@ -131,7 +131,7 @@
 }
 /* Dynamic weather card */
 .dashboard .card.weather {
-  min-height: 330px;
+  min-height: 260px;
   overflow: hidden;
   cursor: pointer;
   isolation: isolate;
@@ -773,4 +773,124 @@
   .weather-rain-chance {
     font-size: 0.7rem;
   }
+}
+/* Compact weather tile */
+.dashboard .card.weather {
+  min-height: 0;
+  padding: 12px 20px;
+}
+
+.weather-header {
+  margin-bottom: 0px;
+}
+
+.weather-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.weather-current {
+  margin-top: 0;
+}
+
+.weather-temperature {
+  font-size: 2.9rem;
+  line-height: 1;
+  margin: 2px 0;
+}
+
+.weather-description {
+  margin-top: 0px;
+  font-size: 0.95rem;
+}
+
+.weather-high-low {
+  margin-top: 2px;
+}
+
+.weather-today-rain {
+  margin-top: 2px;
+  font-size: 0.75rem;
+}
+
+.weather-location {
+  margin-top: 3px;
+}
+
+/* Bring the 5-day forecast closer */
+.weather-five-day {
+  margin-top: 10px;
+  padding-top: 10px;
+  gap: 1px;
+}
+
+.weather-five-day-item {
+  gap: 1.25px;
+}
+
+.weather-five-day-icon {
+  font-size: 1.35rem;
+}
+
+.weather-five-day-name {
+  font-size: 0.68rem;
+}
+
+.weather-five-day-item strong {
+  font-size: 0.85rem !important;
+}
+
+.weather-five-day-rain {
+  font-size: 0.62rem;
+}
+.weather-content {
+  padding-top: 0;
+}
+.weather-header {
+  display: none;
+}
+/* Larger weather text without increasing tile size */
+
+.weather-temperature {
+  font-size: 3.4rem;
+  font-weight: 700;
+  line-height: 0.95;
+}
+
+.weather-description {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.weather-high-low {
+  font-size: 1rem;
+}
+
+.weather-today-rain {
+  font-size: 0.85rem;
+}
+
+.weather-location {
+  font-size: 1rem;
+}
+
+/* 5-day forecast */
+.weather-five-day-name {
+  font-size: 0.78rem;
+}
+
+.weather-five-day-icon {
+  font-size: 1.4rem;
+}
+
+.weather-five-day-item strong {
+  font-size: 1rem !important;
+}
+
+.weather-five-day-rain {
+  font-size: 0.72rem;
+}
+/* Hide arrows on dashboard cards */
+.dashboard .card-arrow {
+  display: none;
 }
