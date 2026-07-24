@@ -4,23 +4,63 @@ import {
   FaCalendarAlt,
   FaChevronRight,
   FaMapMarkerAlt,
-  FaCaravan,
-  FaShoppingCart,
+  
 } from "react-icons/fa";
 import { getWeather, weatherDescription, weatherIcon, dayName, weatherTheme } from "../utils/weather";
 import logo from "../assets/campcheck-logo.png";
+import {
+  departureChecklist,
+  arrivalChecklist,
+} from "../data/checklists";
 
+import { getChecklistProgress } from "../utils/checklistProgress";
+import { TbCaravan } from "react-icons/tb";
+import { HiOutlineShoppingBag } from "react-icons/hi2";
+import { LuCalendarDays, LuClipboardCheck, LuShoppingBasket } from "react-icons/lu";
 function Home() {
   const navigate = useNavigate();
+    const departureProgress = getChecklistProgress(
+    "departureChecklist",
+    departureChecklist
+  );
+
+  const arrivalProgress = getChecklistProgress(
+    "arrivalChecklist",
+    arrivalChecklist
+  );
+
+  const caravanCompleted =
+    departureProgress.completed + arrivalProgress.completed;
+
+  const caravanTotal =
+    departureProgress.total + arrivalProgress.total;
+
+  const caravanPercent =
+    caravanTotal > 0
+      ? Math.round((caravanCompleted / caravanTotal) * 100)
+      : 0;
 
   const [trip, setTrip] = useState(null);
   const [weather, setWeather] = useState(null);
   const [loadingWeather, setLoadingWeather] = useState(false);
   const [weatherError, setWeatherError] = useState(false);
   const [showForecast, setShowForecast] = useState(false);
-
+const [shoppingProgress, setShoppingProgress] = useState({
+  total: 0,
+  completed: 0,
+});
   useEffect(() => {
     async function loadData() {
+      const shoppingItems =
+  JSON.parse(localStorage.getItem("shoppingList")) || [];
+
+const shoppingCompleted =
+  shoppingItems.filter((item) => item.checked).length;
+
+setShoppingProgress({
+  total: shoppingItems.length,
+  completed: shoppingCompleted,
+});
       const trips = JSON.parse(localStorage.getItem("trips")) || [];
 
       if (trips.length > 0) {
@@ -68,7 +108,15 @@ function Home() {
       year: "numeric",
     });
   }
+const shoppingLeft =
+  shoppingProgress.total - shoppingProgress.completed;
 
+const shoppingPercent =
+  shoppingProgress.total > 0
+    ? Math.round(
+        (shoppingProgress.completed / shoppingProgress.total) * 100
+      )
+    : 0;
   return (
     <div className="dashboard">
       <div
@@ -207,15 +255,10 @@ function Home() {
       </div>
 
       {trip ? (
-        <div className="card trip" onClick={() => navigate("/trips")}>
-          <div className="card-header">
-            <h3>
-              <FaCalendarAlt className="card-icon" />
-              Next Trip
-            </h3>
-
-            <FaChevronRight className="card-arrow" />
-          </div>
+        <div className="card trip next-trip" onClick={() => navigate("/trips")}>
+          <div className="floating-card-icon">
+  <LuCalendarDays />
+</div>
 
           <h3>{trip.campsite}</h3>
 
@@ -249,31 +292,59 @@ function Home() {
         </div>
       )}
 
-      <div className="card trip" onClick={() => navigate("/caravan")}>
-        <div className="card-header">
-          <h3>
-            <FaCaravan className="card-icon" />
-            Caravan Checklists
-          </h3>
+      <div
+  className="card trip caravan-card"
+  onClick={() => navigate("/caravan")}
+>
+  <div className="floating-card-icon">
+  <LuClipboardCheck />
+</div>
+  <div className="floating-card-icon">
+ 
+</div>
 
-          <FaChevronRight className="card-arrow" />
-        </div>
+  <div className="caravan-progress-text">
+    {caravanCompleted} of {caravanTotal} completed
+  </div>
 
-        <p>Departure, arrival, packing and maintenance.</p>
-      </div>
+  <div className="caravan-progress-bar">
+    <div
+      className="caravan-progress-fill"
+      style={{ width: `${caravanPercent}%` }}
+    />
+  </div>
 
-      <div className="card trip" onClick={() => navigate("/shopping")}>
-        <div className="card-header">
-          <h3>
-            <FaShoppingCart className="card-icon" />
-            Shopping List
-          </h3>
+  <div className="caravan-progress-percent">
+    {caravanPercent}% complete
+  </div>
+</div>
 
-          <FaChevronRight className="card-arrow" />
-        </div>
+      <div
+  className="card trip shopping-card"
+  onClick={() => navigate("/shopping")}
+>
+  <div className="floating-card-icon">
+ 
+</div>
+  <div className="floating-card-icon">
+  <HiOutlineShoppingBag />
+</div>
 
-        <p>Things to buy before your next trip.</p>
-      </div>
+  <div className="shopping-progress-text">
+    {shoppingLeft} {shoppingLeft === 1 ? "item" : "items"} left
+  </div>
+
+  <div className="shopping-progress-bar">
+    <div
+      className="shopping-progress-fill"
+      style={{ width: `${shoppingPercent}%` }}
+    />
+  </div>
+
+  <div className="shopping-progress-percent">
+    {shoppingPercent}% complete
+  </div>
+</div>
     </div>
   );
 }

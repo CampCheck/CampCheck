@@ -17,6 +17,55 @@
 
 .dashboard .card.trip {
   cursor: pointer;
+  background: linear-gradient(135deg, #1687e8 0%, #0864bd 100%);
+  color: white;
+  padding: 20px 24px;
+  box-shadow: 0 8px 20px rgba(0, 80, 160, 0.28);.dashboard .card.trip {
+  cursor: pointer;
+  color: white;
+  padding: 20px 24px;
+}
+
+/* Next Trip - Blue */
+.dashboard .card.next-trip {
+  background: linear-gradient(135deg, #1687e8 0%, #0864bd 100%);
+  box-shadow: 0 8px 20px rgba(0, 80, 160, 0.28);
+}
+
+/* Caravan Checklists - Green */
+.dashboard .card.caravan-card {
+  background: linear-gradient(135deg, #56c96b 0%, #249447 100%);
+  box-shadow: 0 8px 20px rgba(36, 148, 71, 0.25);
+}
+
+/* Shopping List - Purple */
+.dashboard .card.shopping-card {
+  background: linear-gradient(135deg, #2caad1 0%, #7045bd 100%);
+  box-shadow: 0 8px 20px rgba(112, 69, 189, 0.25);
+}
+}
+/* NEXT TRIP - make all text white */
+.dashboard .card.trip h3,
+.dashboard .card.trip p,
+.dashboard .card.trip strong {
+  color: white;
+}
+
+/* Location icon */
+.dashboard .card.trip .inline-icon {
+  color: white;
+}
+
+/* Calendar icon */
+.dashboard .card.trip .card-icon {
+  color: white;
+}
+
+/* Countdown - bright green like example */
+.dashboard .card.trip p:last-child,
+.dashboard .card.trip p:last-child strong {
+  color: #7cff4f;
+  font-weight: 800;
 }
 
 .dashboard .card:hover {
@@ -64,9 +113,6 @@
   color: #4da8ff;
 }
 
-.trip .card-icon {
-  color: #5abf63;
-}
 
 .dashboard .card h3:not(.card-header h3) {
   text-align: center;
@@ -893,4 +939,185 @@
 /* Hide arrows on dashboard cards */
 .dashboard .card-arrow {
   display: none;
+}
+/* ========================================
+   HOME CARD COLOURS
+======================================== */
+
+/* Next Trip - Blue */
+.dashboard .card.trip.next-trip {
+  background: linear-gradient(135deg, #1687e8 0%, #0864bd 100%);
+}
+
+/* Caravan Checklists - Green */
+.dashboard .card.trip.caravan-card {
+  background: linear-gradient(135deg, #59cf70 0%, #2ca44f 100%);
+}
+
+/* Shopping List - Purple */
+.dashboard .card.trip.shopping-card {
+  background: linear-gradient(135deg, #10b3a8 0%, #0cb7a0 100%);
+}
+/* ========================================
+   CARAVAN CHECKLIST HOME CARD
+======================================== */
+
+.dashboard .card.caravan-card {
+  background: linear-gradient(145deg, #0aa35c 0%, #007a43 100%);
+  color: white;
+  padding: 22px 24px;
+}
+
+.caravan-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.caravan-card-top h3 {
+  margin: 0 !important;
+  text-align: left !important;
+  color: white;
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.caravan-card-icon {
+  font-size: 2rem;
+  color: white;
+}
+
+.caravan-progress-text {
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.caravan-progress-bar {
+  width: 100%;
+  height: 9px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.caravan-progress-fill {
+  height: 100%;
+  background: #76ff61;
+  border-radius: 20px;
+  transition: width 0.3s ease;
+}
+
+.caravan-progress-percent {
+  margin-top: 9px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.9rem;
+}
+/* ========================================
+   SHOPPING LIST HOME CARD
+======================================== */
+
+.dashboard .card.shopping-card {
+  background: linear-gradient(145deg, #0ba7a0 0%, #007c79 100%);
+  color: white;
+  box-shadow: 0 8px 20px rgba(0, 110, 110, 0.28);
+}
+
+.shopping-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.shopping-card-top h3 {
+  margin: 0 !important;
+  text-align: left !important;
+  color: white !important;
+  font-size: 1.3rem !important;
+  font-weight: 700;
+}
+
+.shopping-card-icon {
+  color: white;
+  font-size: 2rem;
+}
+
+.shopping-progress-text {
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.shopping-progress-bar {
+  width: 100%;
+  height: 9px;
+  background: rgba(0, 0, 0, 0.18);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.shopping-progress-fill {
+  height: 100%;
+  background: #43e5df;
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+
+.shopping-progress-percent {
+  margin-top: 9px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.9rem;
+}
+/* Floating icons - top right of cards */
+.dashboard .floating-card-icon {
+  position: absolute;
+  top: 18px;
+  right: 20px;
+  left: auto;
+  transform: none;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 2.4rem;
+  color: #ffffff;
+
+  pointer-events: none;
+  z-index: 10;
+}
+/* Slightly larger Caravan & Shopping tiles */
+.dashboard .card.caravan-card,
+.dashboard .card.shopping-card {
+  min-height: 150px;
+  padding: 24px 28px;
+}
+
+/* Move floating icons higher */
+.dashboard .floating-card-icon {
+  top: 8px;
+  right: 18px;
+  font-size: 2.4rem;
+}
+/* Slightly larger Caravan & Shopping tiles */
+.dashboard .card.caravan-card,
+.dashboard .card.shopping-card {
+  min-height: 135px;
+  padding: 24px 28px;
+}
+
+/* Move floating icons higher */
+.dashboard .floating-card-icon {
+  top: 8px;
+  right: 18px;
+  font-size: 2.4rem;
+}
+/* Move progress content lower */
+.dashboard .caravan-progress-text,
+.dashboard .shopping-progress-text {
+  margin-top: 35px;
 }
