@@ -7,8 +7,7 @@ import {
   FaCaravan,
   FaShoppingCart,
 } from "react-icons/fa";
-import { WiDaySunny } from "react-icons/wi";
-import { getWeather, weatherDescription, weatherIcon, dayName } from "../utils/weather";
+import { getWeather, weatherDescription, weatherIcon, dayName, weatherTheme } from "../utils/weather";
 import logo from "../assets/campcheck-logo.png";
 
 function Home() {
@@ -94,140 +93,118 @@ function Home() {
       </div>
 
       <div
-  className="card weather"
-  onClick={() => setShowForecast(!showForecast)}
-  style={{
-    cursor: "pointer",
-    overflow: "hidden",
-    transition: "0.3s ease",
-  }}
->
-  <div className="card-header">
-    <h3>
-      <WiDaySunny className="card-icon" />
-      Weather
-    </h3>
-
-    <FaChevronRight
-      className="card-arrow"
-      style={{
-        transform: showForecast ? "rotate(90deg)" : "rotate(0deg)",
-        transition: "0.3s",
-      }}
-    />
-  </div>
-
-  {loadingWeather ? (
-    <p>Loading weather...</p>
-  ) : weather ? (
-    <>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginTop: "15px",
+        className={`card weather weather-${weather ? weatherTheme(weather.code) : "default"} ${showForecast ? "weather-open" : ""}`}
+        onClick={() => weather && setShowForecast(!showForecast)}
+        role={weather ? "button" : undefined}
+        tabIndex={weather ? 0 : undefined}
+        onKeyDown={(event) => {
+          if (weather && (event.key === "Enter" || event.key === " ")) {
+            event.preventDefault();
+            setShowForecast(!showForecast);
+          }
         }}
       >
-        <div>
-          <div
-            style={{
-              fontSize: "3rem",
-              fontWeight: "700",
-              lineHeight: 1,
-            }}
-          >
-            {weather.temperature}°
-          </div>
+        {weather && (
+          <div className="weather-scene" aria-hidden="true">
+            <div className="weather-sun" />
+            <div className="weather-cloud weather-cloud-one" />
+            <div className="weather-cloud weather-cloud-two" />
 
-          <div
-            style={{
-              fontSize: "1.1rem",
-              marginTop: "6px",
-            }}
-          >
-            {weatherDescription(weather.code)}
-          </div>
+            {(weatherTheme(weather.code) === "rain" || weatherTheme(weather.code) === "storm") && (
+              <div className="weather-rain">
+                {Array.from({ length: 12 }).map((_, index) => (
+                  <i key={index} />
+                ))}
+              </div>
+            )}
 
-          <div
-            style={{
-              opacity: 0.7,
-              marginTop: "4px",
-            }}
-          >
-            📍 {weather.location}
-          </div>
-        </div>
+            {weatherTheme(weather.code) === "snow" && (
+              <div className="weather-snow">
+                {Array.from({ length: 14 }).map((_, index) => (
+                  <i key={index}>•</i>
+                ))}
+              </div>
+            )}
 
-        {!showForecast && (
-          <div
-            style={{
-              color: "#7ED957",
-              fontWeight: "600",
-              textAlign: "right",
-            }}
-          >
-            
-            <br />
-            
+            {weatherTheme(weather.code) === "storm" && <div className="weather-lightning" />}
           </div>
         )}
-      </div>
 
-      {showForecast && weather.forecast && (
-        <div
-          style={{
-            marginTop: "25px",
-          }}
-        >
-          {weather.forecast.map((day) => (
-            <div
-              key={day.date}
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                padding: "10px 0",
-                borderBottom: "1px solid rgba(255,255,255,.08)",
-              }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "12px",
-                }}
-              >
-                <span style={{ fontSize: "1.8rem" }}>
-                  {weatherIcon(day.code)}
-                </span>
+        <div className="weather-content">
+          <div className="weather-header">
+            <h3>Weather</h3>
+            
+          </div>
 
-                <strong>{dayName(day.date)}</strong>
-              </div>
-
-              <div>
-                <strong>{day.max}°</strong>
-
-                <span
-                  style={{
-                    opacity: 0.6,
-                    marginLeft: "10px",
-                  }}
-                >
-                  {day.min}°
-                </span>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-    </>
-  ) : weatherError ? (
-    <p>Unable to load weather.</p>
-  ) : (
-    <p>Add a town to your trip to see the weather.</p>
-  )}
+          {loadingWeather ? (
+            <p className="weather-message">Loading weather...</p>
+          ) : weather ? (
+            <>
+              <div className="weather-current">
+                <div className="weather-temperature">{weather.temperature}°</div>
+                <div className="weather-description">{weatherDescription(weather.code)}</div>
+                <div className="weather-high-low">
+                  <span>↑ {weather.todayMax}°</span>
+                  <span>/</span>
+                  <span>↓ {weather.todayMin}°</span>
+                </div>
+                <div className="weather-today-rain">
+  💧 {weather.forecast[0]?.rain ?? 0}% chance of rain
 </div>
+                <div className="weather-location">
+                  <FaMapMarkerAlt />
+                  <span>{weather.location}</span>
+                </div>
+              </div>
+              <div className="weather-five-day">
+  {weather.forecast.slice(0, 5).map((day) => (
+    <div className="weather-five-day-item" key={day.date}>
+      <span className="weather-five-day-name">
+        {dayName(day.date)}
+      </span>
+
+      <span className="weather-five-day-icon">
+        {weatherIcon(day.code)}
+      </span>
+
+      <strong>{day.max}°</strong>
+
+      <span className="weather-five-day-rain">
+        💧 {day.rain ?? 0}%
+      </span>
+    </div>
+  ))}
+</div>
+
+              <div className={`weather-forecast ${showForecast ? "weather-forecast-open" : ""}`}>
+                <div className="weather-forecast-inner">
+                  <div className="weather-forecast-title">7-day forecast</div>
+                  {weather.forecast.map((day) => (
+                    <div className="weather-forecast-row" key={day.date}>
+                      <div className="weather-forecast-day">
+                        <span className="weather-forecast-icon">{weatherIcon(day.code)}</span>
+                        <span>
+                          <strong>{dayName(day.date)}</strong>
+                          <small>{weatherDescription(day.code)}</small>
+                        </span>
+                      </div>
+                      <div className="weather-forecast-values">
+                        <span className="weather-rain-chance">💧 {day.rain ?? 0}%</span>
+                        <strong>{day.max}°</strong>
+                        <span>{day.min}°</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </>
+          ) : weatherError ? (
+            <p className="weather-message">Unable to load weather.</p>
+          ) : (
+            <p className="weather-message">Add a town to your trip to see the weather.</p>
+          )}
+        </div>
+      </div>
 
       {trip ? (
         <div className="card trip" onClick={() => navigate("/trips")}>
