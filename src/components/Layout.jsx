@@ -9,60 +9,38 @@ import {
 function Layout() {
   const location = useLocation();
 
+  const isHome = location.pathname === "/";
+
   function getHeader() {
     switch (location.pathname) {
-      case "/":
-        return {
-          title: "CampCheck",
-          subtitle: "Ready for your next adventure",
-        };
-
       case "/caravan":
-        return {
-          title: "Caravan",
-          subtitle: "Manage your caravan checklists",
-        };
+        return "Caravan Checklists";
 
       case "/shopping":
-        return {
-          title: "Shopping List",
-          subtitle: "Everything you need for your next trip",
-        };
-
-      case "/settings":
-        return {
-          title: "Settings",
-          subtitle: "Personalise CampCheck",
-        };
+        return "Shopping List";
 
       case "/trips":
-        return {
-          title: "Trips",
-          subtitle: "Manage your camping trips",
-        };
+        return "Trips";
 
       case "/trips/new":
-        return {
-          title: "New Trip",
-          subtitle: "Plan your next adventure",
-        };
+        return "Add Trip";
+
+      case "/settings":
+        return "Settings";
 
       default:
-        return {
-          title: "CampCheck",
-          subtitle: "",
-        };
+        return "";
     }
   }
 
-  const header = getHeader();
-
   return (
     <div className="app-layout">
-      <header className="app-header">
-        <h1>{header.title}</h1>
-        {header.subtitle && <p>{header.subtitle}</p>}
-      </header>
+
+      {!isHome && (
+        <header className="app-header">
+          <h1>{getHeader()}</h1>
+        </header>
+      )}
 
       <main className="app-content">
         <Outlet />

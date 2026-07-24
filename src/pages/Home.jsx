@@ -8,7 +8,8 @@ import {
   FaShoppingCart,
 } from "react-icons/fa";
 import { WiDaySunny } from "react-icons/wi";
-import { getWeather, weatherDescription } from "../utils/weather";
+import { getWeather, weatherDescription, weatherIcon, dayName } from "../utils/weather";
+import logo from "../assets/campcheck-logo.png";
 
 function Home() {
   const navigate = useNavigate();
@@ -17,6 +18,7 @@ function Home() {
   const [weather, setWeather] = useState(null);
   const [loadingWeather, setLoadingWeather] = useState(false);
   const [weatherError, setWeatherError] = useState(false);
+  const [showForecast, setShowForecast] = useState(false);
 
   useEffect(() => {
     async function loadData() {
@@ -70,35 +72,165 @@ function Home() {
 
   return (
     <div className="dashboard">
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          marginBottom: "30px",
+          paddingTop: "10px",
+        }}
+      >
+        <img
+          src={logo}
+          alt="CampCheck"
+          style={{
+            width: "170px",
+            maxWidth: "70%",
+            height: "auto",
+            display: "block",
+          }}
+        />
+      </div>
 
-      <div className="card weather">
-        <div className="card-header">
-          <h3>
-            <WiDaySunny className="card-icon" />
-            Weather
-          </h3>
+      <div
+  className="card weather"
+  onClick={() => setShowForecast(!showForecast)}
+  style={{
+    cursor: "pointer",
+    overflow: "hidden",
+    transition: "0.3s ease",
+  }}
+>
+  <div className="card-header">
+    <h3>
+      <WiDaySunny className="card-icon" />
+      Weather
+    </h3>
+
+    <FaChevronRight
+      className="card-arrow"
+      style={{
+        transform: showForecast ? "rotate(90deg)" : "rotate(0deg)",
+        transition: "0.3s",
+      }}
+    />
+  </div>
+
+  {loadingWeather ? (
+    <p>Loading weather...</p>
+  ) : weather ? (
+    <>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginTop: "15px",
+        }}
+      >
+        <div>
+          <div
+            style={{
+              fontSize: "3rem",
+              fontWeight: "700",
+              lineHeight: 1,
+            }}
+          >
+            {weather.temperature}°
+          </div>
+
+          <div
+            style={{
+              fontSize: "1.1rem",
+              marginTop: "6px",
+            }}
+          >
+            {weatherDescription(weather.code)}
+          </div>
+
+          <div
+            style={{
+              opacity: 0.7,
+              marginTop: "4px",
+            }}
+          >
+            📍 {weather.location}
+          </div>
         </div>
 
-        {loadingWeather ? (
-          <p>Loading weather...</p>
-        ) : weather ? (
-          <>
-            <p><strong>{weather.temperature}°C</strong></p>
-            <p>{weatherDescription(weather.code)}</p>
-            <p>{weather.location}</p>
-          </>
-        ) : weatherError ? (
-          <p>Unable to load weather.</p>
-        ) : (
-          <p>Add a town to your trip to see the weather.</p>
+        {!showForecast && (
+          <div
+            style={{
+              color: "#7ED957",
+              fontWeight: "600",
+              textAlign: "right",
+            }}
+          >
+            
+            <br />
+            
+          </div>
         )}
       </div>
 
-      {trip ? (
+      {showForecast && weather.forecast && (
         <div
-          className="card trip"
-          onClick={() => navigate("/trips")}
+          style={{
+            marginTop: "25px",
+          }}
         >
+          {weather.forecast.map((day) => (
+            <div
+              key={day.date}
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                padding: "10px 0",
+                borderBottom: "1px solid rgba(255,255,255,.08)",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "12px",
+                }}
+              >
+                <span style={{ fontSize: "1.8rem" }}>
+                  {weatherIcon(day.code)}
+                </span>
+
+                <strong>{dayName(day.date)}</strong>
+              </div>
+
+              <div>
+                <strong>{day.max}°</strong>
+
+                <span
+                  style={{
+                    opacity: 0.6,
+                    marginLeft: "10px",
+                  }}
+                >
+                  {day.min}°
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </>
+  ) : weatherError ? (
+    <p>Unable to load weather.</p>
+  ) : (
+    <p>Add a town to your trip to see the weather.</p>
+  )}
+</div>
+
+      {trip ? (
+        <div className="card trip" onClick={() => navigate("/trips")}>
           <div className="card-header">
             <h3>
               <FaCalendarAlt className="card-icon" />
@@ -140,10 +272,7 @@ function Home() {
         </div>
       )}
 
-      <div
-        className="card trip"
-        onClick={() => navigate("/caravan")}
-      >
+      <div className="card trip" onClick={() => navigate("/caravan")}>
         <div className="card-header">
           <h3>
             <FaCaravan className="card-icon" />
@@ -156,10 +285,7 @@ function Home() {
         <p>Departure, arrival, packing and maintenance.</p>
       </div>
 
-      <div
-        className="card trip"
-        onClick={() => navigate("/shopping")}
-      >
+      <div className="card trip" onClick={() => navigate("/shopping")}>
         <div className="card-header">
           <h3>
             <FaShoppingCart className="card-icon" />
@@ -171,7 +297,6 @@ function Home() {
 
         <p>Things to buy before your next trip.</p>
       </div>
-
     </div>
   );
 }
