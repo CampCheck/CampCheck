@@ -8,7 +8,9 @@ function JourneyBar({ progress }) {
       <div className="journey-road">
         <div
   className="journey-caravan"
-  style={{ left: `${progress}%` }}
+  style={{
+  left: `calc(${progress}% * 0.9 + 5%)`,
+}}
 >
   <FaCaravan />
 </div>

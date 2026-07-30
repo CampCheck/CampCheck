@@ -20,7 +20,16 @@ import { LuCalendarDays, LuClipboardCheck, LuShoppingBasket } from "react-icons/
 import { FaCaravan } from "react-icons/fa6";
 import { FaCampground, FaHome } from "react-icons/fa";
 import JourneyBar from "../components/JourneyBar";
+function calculateProgress(created, departure) {
+  const start = new Date(created).getTime();
+  const end = new Date(departure).getTime();
+  const today = Date.now();
 
+  if (today <= start) return 0;
+  if (today >= end) return 100;
+
+  return ((today - start) / (end - start)) * 100;
+}
 function Home() {
   const navigate = useNavigate();
     const departureProgress = getChecklistProgress(
@@ -130,20 +139,23 @@ const shoppingPercent =
     ? Math.round(
         (shoppingProgress.completed / shoppingProgress.total) * 100
       )
-    : 0;let caravanPosition = 100;
+    : 0;let caravanPosition = 0;
 
-if (trip?.created) {
-  const created = new Date(trip.created);
-  const arrival = new Date(trip.arrival);
-  const today = new Date();
+if (trip?.departure) {
+  const departure = new Date(trip.departure);
+const today = new Date();
 
-  const totalTime = arrival - created;
-  const remainingTime = arrival - today;
+const daysUntilDeparture = Math.max(
+  0,
+  Math.ceil((departure - today) / (1000 * 60 * 60 * 24))
+);
 
-  caravanPosition = Math.max(
-    0,
-    Math.min(100, (remainingTime / totalTime) * 100)
-  );
+const totalDays = 30; // Journey starts 30 days before departure
+
+caravanPosition =
+  ((totalDays - Math.min(daysUntilDeparture, totalDays)) / totalDays) * 100;
+
+  
 }
   return (
     <div className="dashboard">
@@ -305,7 +317,10 @@ if (trip?.created) {
          
 
 
-  <JourneyBar progress={90} />
+<p>Progress: {Math.round(caravanPosition)}%</p>
+  <JourneyBar
+  progress={caravanPosition}
+/>
         </div>
         
       ) : (
