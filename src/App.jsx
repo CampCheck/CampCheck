@@ -17,6 +17,7 @@ function App() {
 
         <Route path="/trips" element={<Trips />} />
         <Route path="/trips/new" element={<AddTrip />} />
+        <Route path="/trips/edit/:id" element={<AddTrip />} />
 
         <Route path="/caravan" element={<Caravan />} />
 

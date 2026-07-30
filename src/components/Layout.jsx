@@ -17,7 +17,7 @@ function Layout() {
         return "Caravan Checklists";
 
       case "/shopping":
-        return "Shopping List";
+        return "";
 
       case "/trips":
         return "Trips";
@@ -36,11 +36,11 @@ function Layout() {
   return (
     <div className="app-layout">
 
-      {!isHome && (
-        <header className="app-header">
-          <h1>{getHeader()}</h1>
-        </header>
-      )}
+      {!isHome && getHeader() && (
+  <header className="app-header">
+    <h1>{getHeader()}</h1>
+  </header>
+)}
 
       <main className="app-content">
         <Outlet />

@@ -17,6 +17,10 @@ import { getChecklistProgress } from "../utils/checklistProgress";
 import { TbCaravan } from "react-icons/tb";
 import { HiOutlineShoppingBag } from "react-icons/hi2";
 import { LuCalendarDays, LuClipboardCheck, LuShoppingBasket } from "react-icons/lu";
+import { FaCaravan } from "react-icons/fa6";
+import { FaCampground, FaHome } from "react-icons/fa";
+import JourneyBar from "../components/JourneyBar";
+
 function Home() {
   const navigate = useNavigate();
     const departureProgress = getChecklistProgress(
@@ -64,10 +68,20 @@ setShoppingProgress({
       const trips = JSON.parse(localStorage.getItem("trips")) || [];
 
       if (trips.length > 0) {
-        trips.sort((a, b) => new Date(a.arrival) - new Date(b.arrival));
+        const today = new Date();
+today.setHours(0, 0, 0, 0);
 
-        const nextTrip = trips[0];
-        setTrip(nextTrip);
+const upcomingTrips = trips
+  .filter((trip) => new Date(trip.departure) >= today)
+  .sort((a, b) => new Date(a.arrival) - new Date(b.arrival));
+
+if (upcomingTrips.length === 0) {
+  setTrip(null);
+  return;
+}
+
+const nextTrip = upcomingTrips[0];
+setTrip(nextTrip);
 
         if (nextTrip.town) {
           try {
@@ -116,7 +130,21 @@ const shoppingPercent =
     ? Math.round(
         (shoppingProgress.completed / shoppingProgress.total) * 100
       )
-    : 0;
+    : 0;let caravanPosition = 100;
+
+if (trip?.created) {
+  const created = new Date(trip.created);
+  const arrival = new Date(trip.arrival);
+  const today = new Date();
+
+  const totalTime = arrival - created;
+  const remainingTime = arrival - today;
+
+  caravanPosition = Math.max(
+    0,
+    Math.min(100, (remainingTime / totalTime) * 100)
+  );
+}
   return (
     <div className="dashboard">
       <div
@@ -260,7 +288,7 @@ const shoppingPercent =
   <LuCalendarDays />
 </div>
 
-          <h3>{trip.campsite}</h3>
+          <h3 className="trip-campsite">{trip.campsite}</h3>
 
           <p>
             <FaMapMarkerAlt className="inline-icon" />
@@ -274,15 +302,20 @@ const shoppingPercent =
           <p>
             <strong>{daysUntil(trip.arrival)} days to go</strong>
           </p>
+         
+
+
+  <JourneyBar progress={90} />
         </div>
+        
       ) : (
+        
         <div className="card trip">
-          <div className="card-header">
-            <h3>
-              <FaCalendarAlt className="card-icon" />
-              Next Trip
-            </h3>
-          </div>
+          <div className="next-trip-top">
+  <div className="next-trip-icon">
+    <FaCalendarAlt />
+  </div>
+</div>
 
           <p>No trips planned.</p>
 
@@ -296,12 +329,14 @@ const shoppingPercent =
   className="card trip caravan-card"
   onClick={() => navigate("/caravan")}
 >
-  <div className="floating-card-icon">
-  <LuClipboardCheck />
-</div>
-  <div className="floating-card-icon">
- 
-</div>
+
+  <div className="caravan-card-top">
+    <h3>Checklists</h3>
+
+    <div className="caravan-card-icon">
+      <LuClipboardCheck />
+    </div>
+  </div>
 
   <div className="caravan-progress-text">
     {caravanCompleted} of {caravanTotal} completed
@@ -323,13 +358,14 @@ const shoppingPercent =
   className="card trip shopping-card"
   onClick={() => navigate("/shopping")}
 >
+  
   <div className="floating-card-icon">
- 
-</div>
-  <div className="floating-card-icon">
+
   <HiOutlineShoppingBag />
 </div>
-
+<div className="shopping-card-top">
+  <h3>Shopping</h3>
+</div>
   <div className="shopping-progress-text">
     {shoppingLeft} {shoppingLeft === 1 ? "item" : "items"} left
   </div>

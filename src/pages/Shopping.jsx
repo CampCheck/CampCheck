@@ -1,77 +1,116 @@
-import { useEffect, useState } from "react";
+
+import { useEffect, useMemo, useState } from "react";
 import "./../styles/shopping.css";
 
-function Shopping() {
+export default function Shopping() {
   const [items, setItems] = useState([]);
   const [newItem, setNewItem] = useState("");
+  const [quantity, setQuantity] = useState(1);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     const saved = JSON.parse(localStorage.getItem("shoppingList")) || [];
-    setItems(saved);
+    setItems(saved.map(i => ({ ...i, quantity: i.quantity ?? 1 })));
   }, []);
-
   useEffect(() => {
     localStorage.setItem("shoppingList", JSON.stringify(items));
   }, [items]);
 
-  function addItem() {
+  const addItem = () => {
     if (!newItem.trim()) return;
-
     setItems([
       ...items,
       {
         id: Date.now(),
-        text: newItem,
+        text: newItem.trim(),
+        quantity,
         checked: false,
       },
     ]);
-
     setNewItem("");
-  }
+    setQuantity(1);
+  };
 
-  function toggleItem(id) {
-    setItems(
-      items.map((item) =>
-        item.id === id
-          ? { ...item, checked: !item.checked }
-          : item
-      )
-    );
-  }
+  const toggleItem = id =>
+    setItems(items.map(i => i.id === id ? { ...i, checked: !i.checked } : i));
 
-  function deleteItem(id) {
-    setItems(items.filter((item) => item.id !== id));
-  }
+  const deleteItem = id =>
+    setItems(items.filter(i => i.id !== id));
 
-  const completed = items.filter((item) => item.checked).length;
+  const changeQty = (id, delta) =>
+    setItems(items.map(i =>
+      i.id === id
+        ? { ...i, quantity: Math.max(1, (i.quantity ?? 1) + delta) }
+        : i
+    ));
+
+  const untickAll = () =>
+    setItems(items.map(i => ({ ...i, checked: false })));
+
+  const filtered = useMemo(
+    () =>
+      items.filter(i =>
+        i.text.toLowerCase().includes(search.toLowerCase())
+      ),
+    [items, search]
+  );
+
+  const completed = items.filter(i => i.checked).length;
+  const percent = items.length
+    ? Math.round((completed / items.length) * 100)
+    : 0;
 
   return (
-    <div className="shopping-page">
+  <div className="shopping-page">
 
-      <div className="shopping-add">
+ <div className="shopping-title">
+  <h1>Shopping</h1>
+  <p>Everything you need for your next trip</p>
+</div>
 
-        <input
-          type="text"
-          placeholder="Add an item..."
-          value={newItem}
-          onChange={(e) => setNewItem(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && addItem()}
-        />
+<div className="progress-card">
+        <div className="progress-text">
+          {completed}/{items.length} Purchased
+        </div>
 
-        <button onClick={addItem}>
-          Add
-        </button>
-
+        <div className="bar">
+          <div style={{ width: `${percent}%` }} />
+        </div>
       </div>
 
-      <div className="shopping-list">
+      <input
+        className="search"
+        placeholder="Search..."
+        value={search}
+        onChange={e => setSearch(e.target.value)}
+      />
 
-        {items.length === 0 ? (
-          <p className="empty">
-            Your shopping list is empty.
-          </p>
+      <div className="shopping-add">
+        <input
+          value={newItem}
+          placeholder="Add item..."
+          onChange={e => setNewItem(e.target.value)}
+          onKeyDown={e => e.key === "Enter" && addItem()}
+        />
+
+        <div className="qty">
+          <button onClick={() => setQuantity(Math.max(1, quantity - 1))}>-</button>
+          <span>{quantity}</span>
+          <button onClick={() => setQuantity(quantity + 1)}>+</button>
+        </div>
+
+        <button onClick={addItem}>Add</button>
+      </div>
+
+      <button className="untick" onClick={untickAll}>
+        Untick All
+      </button>
+
+      <div className="shopping-list">
+        {filtered.length === 0 ? (
+          <p className="empty">No items found.</p>
         ) : (
-          items.map((item) => (
+          filtered.map(item => (
             <div
               key={item.id}
               className={`shopping-item ${item.checked ? "checked" : ""}`}
@@ -82,9 +121,14 @@ function Shopping() {
                   checked={item.checked}
                   onChange={() => toggleItem(item.id)}
                 />
-
                 <span>{item.text}</span>
               </label>
+
+              <div className="qty">
+                <button onClick={() => changeQty(item.id, -1)}>-</button>
+                <span>{item.quantity}</span>
+                <button onClick={() => changeQty(item.id, 1)}>+</button>
+              </div>
 
               <button
                 className="delete-btn"
@@ -95,15 +139,7 @@ function Shopping() {
             </div>
           ))
         )}
-
       </div>
-
-      <div className="shopping-footer">
-        {completed} of {items.length} purchased
-      </div>
-
     </div>
   );
 }
-
-export default Shopping;

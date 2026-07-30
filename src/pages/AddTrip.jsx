@@ -1,14 +1,26 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
 function AddTrip() {
   const navigate = useNavigate();
-
+const { id } = useParams();
   const [campsite, setCampsite] = useState("");
   const [town, setTown] = useState("");
   const [arrival, setArrival] = useState("");
   const [departure, setDeparture] = useState("");
+useEffect(() => {
+  if (!id) return;
 
+  const trips = JSON.parse(localStorage.getItem("trips")) || [];
+  const trip = trips.find((t) => t.id === Number(id));
+
+  if (!trip) return;
+
+  setCampsite(trip.campsite);
+  setTown(trip.town);
+  setArrival(trip.arrival);
+  setDeparture(trip.departure);
+}, [id]);
   function saveTrip() {
     if (!campsite || !arrival) {
       alert("Please enter a campsite and arrival date.");
@@ -17,13 +29,26 @@ function AddTrip() {
 
     const trips = JSON.parse(localStorage.getItem("trips")) || [];
 
-    trips.push({
-      id: Date.now(),
-      campsite,
-      town,
-      arrival,
-      departure,
-    });
+if (id) {
+  const index = trips.findIndex((trip) => trip.id === Number(id));
+
+ trips[index] = {
+  ...trips[index],
+  campsite,
+  town,
+  arrival,
+  departure,
+};
+} else {
+ trips.push({
+  id: Date.now(),
+  created: new Date().toISOString(),
+  campsite,
+  town,
+  arrival,
+  departure,
+});
+}
 
     trips.sort((a, b) => new Date(a.arrival) - new Date(b.arrival));
 
