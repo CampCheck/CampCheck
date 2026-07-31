@@ -1212,13 +1212,13 @@
 .journey-wrapper{
     display:flex;
     align-items:center;
-    gap:12px;
+    gap:0px;
     margin-top:20px;
 }
 
 .journey-road{
     flex: 1;
-margin: 0 12px;
+margin: 0 4px;
     height:10px;
     background: linear-gradient(
         to right,
