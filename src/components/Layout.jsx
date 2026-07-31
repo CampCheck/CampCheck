@@ -20,7 +20,7 @@ function Layout() {
         return "";
 
       case "/trips":
-        return "Trips";
+        return "My Trips";
 
       case "/trips/new":
         return "Add Trip";
