@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 function AddTrip() {
@@ -8,6 +8,7 @@ const { id } = useParams();
   const [town, setTown] = useState("");
   const [arrival, setArrival] = useState("");
   const [departure, setDeparture] = useState("");
+  const departureRef = useRef(null);
 useEffect(() => {
   if (!id) return;
 
@@ -77,17 +78,25 @@ if (id) {
 
       <label>Arrival Date</label>
       <input
-        type="date"
-        value={arrival}
-        onChange={(e) => setArrival(e.target.value)}
-      />
+  type="date"
+  value={arrival}
+  onChange={(e) => {
+    setArrival(e.target.value);
+
+    setTimeout(() => {
+      departureRef.current?.focus();
+      departureRef.current?.showPicker?.();
+    }, 100);
+  }}
+/>
 
       <label>Departure Date</label>
       <input
-        type="date"
-        value={departure}
-        onChange={(e) => setDeparture(e.target.value)}
-      />
+  ref={departureRef}
+  type="date"
+  value={departure}
+  onChange={(e) => setDeparture(e.target.value)}
+/>
 
       <button
         onClick={saveTrip}

@@ -65,10 +65,15 @@ function deleteTrip(id) {
 
   return 0;
 }
-  return (
+ return (
+  <>
+    
+
     <div className="dashboard trips-page">
-     <div className="section-header">
-  <h2>Upcoming Trips</h2>
+      <div className="section-header-card">
+  <span className="section-title">
+    Upcoming Trips
+  </span>
 
   <span className="trip-count">
     {upcomingTrips.length}
@@ -124,11 +129,10 @@ function deleteTrip(id) {
       )}
 {previousTrips.length > 0 && (
   <>
-    <div className="section-header previous-section">
-  <div>
-    <h2>Previous Trips</h2>
-    
-  </div>
+    <div className="section-header-card">
+  <span className="section-title">
+    Past Trips
+  </span>
 
   <span className="trip-count">
     {previousTrips.length}
@@ -164,8 +168,9 @@ function deleteTrip(id) {
 >
   +
 </button>
-    </div>
-  );
+                </div>
+  </>
+);
 }
 
 export default Trips;

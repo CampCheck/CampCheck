@@ -5,40 +5,24 @@ import {
   FaShoppingCart,
   FaCog,
 } from "react-icons/fa";
+import logo from "../assets/campcheck-logo.png";
 
 function Layout() {
   const location = useLocation();
 
   const isHome = location.pathname === "/";
 
-  function getHeader() {
-    switch (location.pathname) {
-      case "/caravan":
-        return "Caravan Checklists";
-
-      case "/shopping":
-        return "";
-
-      case "/trips":
-        return "My Trips";
-
-      case "/trips/new":
-        return "Add Trip";
-
-      case "/settings":
-        return "Settings";
-
-      default:
-        return "";
-    }
-  }
-
+  
   return (
     <div className="app-layout">
 
-      {!isHome && getHeader() && (
+      {!isHome && (
   <header className="app-header">
-    <h1>{getHeader()}</h1>
+    <img
+      src={logo}
+      alt="CampCheck"
+      className="app-logo"
+    />
   </header>
 )}
 

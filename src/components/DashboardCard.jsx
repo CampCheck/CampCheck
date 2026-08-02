@@ -19,35 +19,37 @@ function DashboardCard({
   }
 
   return (
-    <div className="dashboard-card">
-      <div className="card-header">
-        <h2>
-          {icon} {title}
-        </h2>
+  <div className="dashboard-card">
+    <div className="card-header">
+      <h2>
+        {icon} {title}
+      </h2>
 
-        <span className="card-status">
-          {status}
-        </span>
-      </div>
+      <span className="card-count">
+        {completed}/{total}
+      </span>
+    </div>
 
-      <div className="card-progress">
-        <div
-          className="card-progress-fill"
-          style={{ width: `${percentage}%` }}
-        />
-      </div>
+    <div className="card-progress">
+      <div
+        className="card-progress-fill"
+        style={{ width: `${percentage}%` }}
+      />
+    </div>
 
-      <p>
-        {completed} / {total} Complete
-      </p>
+    <div className="card-footer">
+      <span>{status}</span>
 
       {link && (
         <Link to={link}>
-          <button>Open</button>
+          <button className="open-btn">
+            Open
+          </button>
         </Link>
       )}
     </div>
-  );
+  </div>
+);
 }
 
 export default DashboardCard;
