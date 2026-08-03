@@ -1,49 +1,100 @@
-.shopping-page{display:flex;flex-direction:column;gap:16px
+/* ========================================
+   SHOPPING PAGE
+======================================== */
+
+.shopping-page{
+    display:flex;
+    flex-direction:column;
+    gap:16px;
 }
 
-.shop-header{background:linear-gradient(135deg,#0ea5e9,#2563eb);padding:20px;border-radius:18px;color:#fff
+.shop-header{
+    background:linear-gradient(135deg,#0ea5e9,#2563eb);
+    padding:20px;
+    border-radius:18px;
+    color:#fff
 }
 
-.bar{height:10px;background:#ffffff44;border-radius:10px;overflow:hidden;margin-top:10px
+.bar{
+    height:10px;background:#ffffff44;border-radius:10px;
+    overflow:hidden;
+    margin-top:10px
 }
 
-.bar div{height:100%;background:#fff
+.bar div{
+    height:100%;
+    background:#fff
 }
 
-.search,.shopping-add input{padding:14px;border:none;border-radius:12px;background:#2d2d2d;color:#fff
+.search,.shopping-add input{
+    padding:14px;
+    border:none;
+    border-radius:12px;
+    background:#2d2d2d;
+    color:#fff
 }
 
-.search{width:100%
+.search{
+    width:100%
 }
 
-.shopping-add{display:flex;gap:10px
+.shopping-add{
+    display:flex;gap:10px
 }
 
-.shopping-add input{flex:1
+.shopping-add input{
+    flex:1
 }
 
-.qty{display:flex;align-items:center;gap:8px
+.qty{
+    display:flex;
+    align-items:center;
+    gap:8px
 }
 
-.qty button,.shopping-add>button,.untick{border:none;border-radius:10px;padding:10px 14px;background:#2563eb;color:#fff;cursor:pointer
+.qty button,.shopping-add>button,.untick{
+    border:none;
+    border-radius:10px;
+    padding:10px 14px;
+    background:#2563eb;
+    color:#fff;
+    cursor:pointer
 }
 
-.shopping-list{display:flex;flex-direction:column;gap:12px
+.shopping-list{
+    display:flex;
+    flex-direction:column;
+    gap:12px
 }
 
-.shopping-item{display:flex;align-items:center;justify-content:space-between;background:#2d2d2d;padding:16px;border-radius:16px
+.shopping-item{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    background:#2d2d2d;
+    padding:16px;
+    border-radius:16px
 }
 
-.shopping-item label{display:flex;gap:12px;align-items:center;flex:1
+.shopping-item label{
+    display:flex;
+    gap:12px;
+    align-items:center;
+    flex:1
 }
 
-.checked span{text-decoration:line-through;opacity:.5
+.checked span{
+    text-decoration:line-through;
+    opacity:.5
 }
 
-.delete-btn{background:#dc2626!important
+.delete-btn{
+    background:#dc2626!important
 }
 
-.empty{text-align:center;color:#999
+.empty{
+    text-align:center;
+    color:#999
 }
 
 .shopping-title{
@@ -65,4 +116,61 @@
     margin:6px 0 0;
     color:rgba(255,255,255,0.9);
     font-size:.95rem;
+}
+/* ========================================
+   SHOPPING LIST HOME CARD
+======================================== */
+
+.dashboard .card.shopping-card {
+  background: linear-gradient(145deg, #0ba7a0 0%, #007c79 100%);
+  color: white;
+  box-shadow: 0 8px 20px rgba(0, 110, 110, 0.28);
+}
+
+.shopping-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.shopping-card-top h3 {
+  margin: 0 !important;
+  text-align: left !important;
+  color: white !important;
+  font-size: 1.3rem !important;
+  font-weight: 700;
+}
+
+.shopping-card-icon {
+  color: white;
+  font-size: 2rem;
+}
+
+.shopping-progress-text {
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.shopping-progress-bar {
+  width: 100%;
+  height: 9px;
+  background: rgba(0, 0, 0, 0.18);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.shopping-progress-fill {
+  height: 100%;
+  background: #43e5df;
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+
+.shopping-progress-percent {
+  margin-top: 9px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.9rem;
 }

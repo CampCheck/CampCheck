@@ -1,0 +1,38 @@
+
+.journey-wrapper{
+    display:flex;
+    align-items:center;
+    gap:0px;
+    margin-top:12px;
+}
+
+.journey-road{
+    flex:1;
+    margin:0 4px;
+    height:6px;
+    background:#666;
+    );
+    border-radius:999px;
+    position:relative;
+   overflow:visible;
+}
+.journey-home{
+    color:#4da3ff;
+    font-size:1.4rem;
+}
+
+.journey-camp{
+    color:#5fd35f;
+    font-size:1.4rem;
+}
+
+.journey-caravan{
+    position:absolute;
+    left:0;
+    top:50%;
+    transform: translate(-50%, -65%);
+    font-size:1.4rem;
+    z-index:10;
+    transition: left 0.6s ease;
+}
+

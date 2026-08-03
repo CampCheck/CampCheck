@@ -7,24 +7,24 @@
   box-shadow: 0 8px 15px rgba(0,0,0,.25);
 }
 
-.card-header {
+.dashboard-card .card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 10px;
 }
 
-.card-header h2 {
+.dashboard-card .card-header h2 {
   margin: 0;
   font-size: 1.2rem;
 }
 
-.card-status {
+.dashboard-card .card-status {
   font-size: 0.9rem;
   font-weight: bold;
 }
 
-.card-progress {
+.dashboard-card .card-progress {
   width: 100%;
   height: 10px;
   background: #374151;
@@ -33,7 +33,7 @@
   margin: 10px 0;
 }
 
-.card-progress-fill {
+.dashboard-card .card-progress-fill {
   height: 100%;
   background: #22c55e;
   transition: width .3s ease;

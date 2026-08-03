@@ -1,0 +1,57 @@
+/* ========================================
+   CARAVAN CHECKLIST HOME CARD
+======================================== */
+
+.dashboard .card.caravan-card {
+  background: linear-gradient(145deg, #0aa35c 0%, #007a43 100%);
+  color: white;
+  padding: 22px 24px;
+}
+
+.caravan-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.caravan-card-top h3 {
+  margin: 0 !important;
+  text-align: left !important;
+  color: white;
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.caravan-card-icon {
+  font-size: 2rem;
+  color: white;
+}
+
+.caravan-progress-text {
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.caravan-progress-bar {
+  width: 100%;
+  height: 9px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.caravan-progress-fill {
+  height: 100%;
+  background: #76ff61;
+  border-radius: 20px;
+  transition: width 0.3s ease;
+}
+
+.caravan-progress-percent {
+  margin-top: 9px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.9rem;
+}

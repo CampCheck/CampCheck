@@ -1,11 +1,15 @@
-/* Layout */
+/* ========================================
+   APP LAYOUT
+======================================== */
 
 .app-layout{
     min-height:100vh;
     display:flex;
     flex-direction:column;
 }
-/* Home has no header now */
+/* ========================================
+   HEADER
+======================================== */
 
 .app-header{
     display:flex;
@@ -24,10 +28,12 @@
     transform:scale(1.02);
 }
 
+/* ========================================
+   BOTTOM NAVIGATION
+======================================== */
+
 .bottom-nav{
-
     position:fixed;
-
     left:16px;
     right:16px;
     bottom:16px;
@@ -35,13 +41,11 @@
     height:72px;
 
     background:white;
-
     border-radius:22px;
 
     display:flex;
 
-    box-shadow:
-    0 12px 35px rgba(0,0,0,.18);
+    box-shadow:0 12px 35px rgba(0,0,0,.18);
 
     z-index:999;
 }
