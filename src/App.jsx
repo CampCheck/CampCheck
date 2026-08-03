@@ -8,6 +8,8 @@ import AddTrip from "./pages/AddTrip";
 import Caravan from "./pages/Caravan";
 import Shopping from "./pages/Shopping";
 import Settings from "./pages/Settings";
+import Departure from "./pages/Departure";
+import Arrival from "./pages/Arrival";
 
 function App() {
   return (
@@ -20,6 +22,14 @@ function App() {
         <Route path="/trips/edit/:id" element={<AddTrip />} />
 
         <Route path="/caravan" element={<Caravan />} />
+        <Route
+          path="/caravan/departure"
+          element={<Departure />}
+        />
+        <Route
+          path="/caravan/arrival"
+          element={<Arrival />}
+        />
 
         <Route path="/shopping" element={<Shopping />} />
 

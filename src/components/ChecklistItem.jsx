@@ -1,13 +1,17 @@
 function ChecklistItem({ checked, text, onToggle }) {
   return (
-    <label>
+    <div className={`checklist-item ${checked ? "checked" : ""}`}>
       <input
+        id={text}
         type="checkbox"
         checked={checked}
         onChange={onToggle}
       />
-      {text}
-    </label>
+
+      <label htmlFor={text}>
+        {text}
+      </label>
+    </div>
   );
 }
 

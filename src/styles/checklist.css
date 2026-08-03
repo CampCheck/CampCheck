@@ -1,0 +1,136 @@
+/* ========================================
+   CHECKLIST PAGE
+======================================== */
+
+.checklist-page{
+    max-width:700px;
+    margin:0 auto;
+    padding-bottom:100px;
+}
+
+.checklist-page h1{
+    margin-bottom:20px;
+    font-size:2rem;
+    color:var(--text);
+}
+
+/* ========================================
+   CHECKLIST LIST
+======================================== */
+
+.checklist-list{
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    margin-top:24px;
+}
+
+/* ========================================
+   CHECKLIST ITEM
+======================================== */
+
+.checklist-item{
+    display:flex;
+    align-items:center;
+    gap:16px;
+
+    background:#ffffff;
+    border-radius:18px;
+    padding:18px;
+
+    box-shadow:0 6px 18px rgba(0,0,0,.08);
+
+    transition:.2s ease;
+}
+
+.checklist-item:hover{
+    transform:translateY(-2px);
+    box-shadow:0 8px 18px rgba(0,0,0,.12);
+}
+
+.checklist-item input[type="checkbox"]{
+    width:28px;
+    height:28px;
+    accent-color:#22c55e;
+    cursor:pointer;
+}
+
+.checklist-item label{
+    flex:1;
+    cursor:pointer;
+    font-size:1rem;
+    color:var(--text);
+}
+
+.checklist-item.checked{
+    background:#dcfce7;
+}
+
+.checklist-item.checked label{
+    text-decoration:line-through;
+    color:#6b7280;
+}
+
+/* ========================================
+   BUTTONS
+======================================== */
+
+.checklist-buttons{
+    display:flex;
+    gap:12px;
+    margin-top:28px;
+}
+
+.checklist-buttons a{
+    flex:1;
+}
+
+.checklist-buttons button{
+    width:100%;
+    border:none;
+    border-radius:14px;
+    padding:14px;
+
+    background:linear-gradient(145deg,#0aa35c,#007a43);
+    color:#fff;
+
+    font-size:1rem;
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.2s ease;
+}
+
+.checklist-buttons button:hover{
+    transform:translateY(-2px);
+    box-shadow:0 8px 18px rgba(0,122,67,.25);
+}
+/* ========================================
+   PROGRESS BAR
+======================================== */
+
+.progress-wrapper{
+    margin-bottom:25px;
+}
+
+.progress-track{
+    width:100%;
+    height:18px;
+    background:#dbe4ea;
+    border-radius:999px;
+    overflow:hidden;
+}
+
+.progress-fill{
+    height:100%;
+    background:linear-gradient(90deg,#59cf70,#2ca44f);
+    transition:width .3s ease;
+}
+
+.progress-text{
+    text-align:center;
+    margin-top:10px;
+    font-weight:700;
+    color:var(--text);
+}

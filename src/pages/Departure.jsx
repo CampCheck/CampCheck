@@ -4,7 +4,7 @@ import { departureChecklist } from "../data/checklists";
 function Departure() {
   return (
     <ChecklistPage
-      title="🚗 Before Leaving Home"
+      title="Before Leaving Home"
       storageKey="departureChecklist"
       items={departureChecklist}
       backLink="/caravan"

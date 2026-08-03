@@ -24,7 +24,7 @@ function Caravan() {
 
   return (
     <div>
-      <h1>🚐 Caravan</h1>
+      
 
       <DashboardCard
   title="Trip Progress"

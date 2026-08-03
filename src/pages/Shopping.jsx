@@ -1,17 +1,23 @@
 
 import { useEffect, useMemo, useState } from "react";
 import "./../styles/shopping.css";
+import { FaRegTrashCan } from "react-icons/fa6";
 
 export default function Shopping() {
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState(() => {
+  const saved =
+    JSON.parse(localStorage.getItem("shoppingList")) || [];
+
+  return saved.map(item => ({
+    ...item,
+    quantity: item.quantity ?? 1,
+  }));
+});
   const [newItem, setNewItem] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [search, setSearch] = useState("");
 
-  useEffect(() => {
-    const saved = JSON.parse(localStorage.getItem("shoppingList")) || [];
-    setItems(saved.map(i => ({ ...i, quantity: i.quantity ?? 1 })));
-  }, []);
+  
   useEffect(() => {
     localStorage.setItem("shoppingList", JSON.stringify(items));
   }, [items]);
@@ -130,12 +136,12 @@ export default function Shopping() {
                 <button onClick={() => changeQty(item.id, 1)}>+</button>
               </div>
 
-              <button
-                className="delete-btn"
-                onClick={() => deleteItem(item.id)}
-              >
-                ✕
-              </button>
+             <button
+  className="delete-btn"
+  onClick={() => deleteItem(item.id)}
+>
+  <FaRegTrashCan />
+</button>
             </div>
           ))
         )}

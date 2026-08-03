@@ -36,34 +36,33 @@ function ChecklistPage({ title, storageKey, items, backLink }) {
   const total = items.length;
 
   return (
-    <div className="container">
+    <div className="container checklist-page">
       <h1>{title}</h1>
 
       <ProgressBar completed={completed} total={total} />
 
-      {items.map((item) => (
-        <ChecklistItem
-          key={item}
-          checked={checks[item]}
-          text={item}
-          onToggle={() => toggle(item)}
-        />
-      ))}
+      <div className="checklist-list">
+  {items.map((item) => (
+    <ChecklistItem
+      key={item}
+      checked={checks[item]}
+      text={item}
+      onToggle={() => toggle(item)}
+    />
+  ))}
+</div>
 
-      <br />
+      <div className="checklist-buttons">
+  <button onClick={() => setShowResetDialog(true)}>
+    Reset Checklist
+  </button>
 
-      <div style={{ marginTop: "20px" }}>
-        <button onClick={() => setShowResetDialog(true)}>
-          🔄 Reset Checklist
-        </button>
-
-        <br />
-        <br />
-
-        <Link to={backLink}>
-          <button>⬅️ Back</button>
-        </Link>
-      </div>
+  <Link to={backLink}>
+    <button>
+      Back
+    </button>
+  </Link>
+</div>
 
       <ConfirmDialog
         open={showResetDialog}
