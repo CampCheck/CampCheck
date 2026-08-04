@@ -11,10 +11,9 @@
     margin:0 4px;
     height:6px;
     background:#666;
-    );
     border-radius:999px;
     position:relative;
-   overflow:visible;
+    overflow:visible;
 }
 .journey-home{
     color:#4da3ff;
