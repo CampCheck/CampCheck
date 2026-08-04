@@ -1,3 +1,5 @@
+import "../styles/journeybar.css";
+
 import { FaHome, FaCampground } from "react-icons/fa";
 import { FaCaravan } from "react-icons/fa6";
 function JourneyBar({ progress }) {
