@@ -1,10 +1,10 @@
-export function getChecklistProgress(storageKey, items) {
-  const checks = JSON.parse(localStorage.getItem(storageKey)) || {};
+export function getChecklistProgress(storageKey, checklist) {
+  const saved = JSON.parse(localStorage.getItem(storageKey)) || {};
 
-  const completed = items.filter((item) => checks[item]).length;
+  const completed = checklist.filter(item => saved[item]).length;
 
   return {
     completed,
-    total: items.length,
+    total: checklist.length,
   };
 }

@@ -1,7 +1,12 @@
 
 import { useEffect, useMemo, useState } from "react";
 import "./../styles/shopping.css";
-import { FaRegTrashCan } from "react-icons/fa6";
+import {
+  FaRegTrashCan,
+  FaRegPenToSquare,
+  FaCheck,
+  FaXmark
+} from "react-icons/fa6";
 
 export default function Shopping() {
   const [items, setItems] = useState(() => {
@@ -16,7 +21,8 @@ export default function Shopping() {
   const [newItem, setNewItem] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [search, setSearch] = useState("");
-
+  const [editingId, setEditingId] = useState(null);
+  const [editingText, setEditingText] = useState("");
   
   useEffect(() => {
     localStorage.setItem("shoppingList", JSON.stringify(items));
@@ -42,6 +48,26 @@ export default function Shopping() {
 
   const deleteItem = id =>
     setItems(items.filter(i => i.id !== id));
+
+  function startEdit(item) {
+  setEditingId(item.id);
+  setEditingText(item.text);
+}
+
+function saveEdit(id) {
+  if (!editingText.trim()) return;
+
+  setItems(
+    items.map(item =>
+      item.id === id
+        ? { ...item, text: editingText.trim() }
+        : item
+    )
+  );
+
+  setEditingId(null);
+  setEditingText("");
+}
 
   const changeQty = (id, delta) =>
     setItems(items.map(i =>
@@ -75,14 +101,10 @@ export default function Shopping() {
 </div>
 
 <div className="progress-card">
-        <div className="progress-text">
-          {completed}/{items.length} Purchased
-        </div>
-
-        <div className="bar">
-          <div style={{ width: `${percent}%` }} />
-        </div>
-      </div>
+  <div className="progress-text">
+    {completed} / {items.length} Purchased
+  </div>
+</div>
 
       <input
         className="search"
@@ -127,7 +149,19 @@ export default function Shopping() {
                   checked={item.checked}
                   onChange={() => toggleItem(item.id)}
                 />
-                <span>{item.text}</span>
+                {editingId === item.id ? (
+  <input
+    className="edit-input"
+    value={editingText}
+    onChange={(e) => setEditingText(e.target.value)}
+    onKeyDown={(e) => {
+      if (e.key === "Enter") saveEdit(item.id);
+    }}
+    autoFocus
+  />
+) : (
+  <span>{item.text}</span>
+)}
               </label>
 
               <div className="qty">
@@ -136,12 +170,44 @@ export default function Shopping() {
                 <button onClick={() => changeQty(item.id, 1)}>+</button>
               </div>
 
-             <button
-  className="delete-btn"
-  onClick={() => deleteItem(item.id)}
+             {editingId === item.id ? (
+  <div className="shopping-actions">
+  <button
+    className="save-btn"
+    onClick={() => saveEdit(item.id)}
+  >
+    <FaCheck />
+  </button>
+
+  <button
+    className="cancel-btn"
+    onClick={() => {
+      setEditingId(null);
+      setEditingText("");
+    }}
+  >
+    <FaXmark />
+  </button>
+</div>
+) : (
+  <>
+    <div className="shopping-actions">
+  <button
+  className="edit-btn"
+  onClick={() => startEdit(item)}
 >
-  <FaRegTrashCan />
+  <FaRegPenToSquare />
 </button>
+
+  <button
+    className="delete-btn"
+    onClick={() => deleteItem(item.id)}
+  >
+    <FaRegTrashCan />
+  </button>
+</div>
+  </>
+)}
             </div>
           ))
         )}

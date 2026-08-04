@@ -369,7 +369,7 @@ if (trip?.arrival) {
 </div>
 
       <div
-  className="card trip shopping-card"
+  className="card shopping-card"
   onClick={() => navigate("/shopping")}
 >
   

@@ -16,23 +16,9 @@ function Caravan() {
     arrivalChecklist
   );
 
-  const totalCompleted =
-    departure.completed + arrival.completed;
-
-  const totalTasks =
-    departure.total + arrival.total;
-
   return (
     <div>
       
-
-      <DashboardCard
-  title="Trip Progress"
-  icon="📊"
-  completed={totalCompleted}
-  total={totalTasks}
-/>
-
       <DashboardCard
         title="Before Leaving Home"
         icon="🏠"
