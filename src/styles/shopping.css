@@ -317,3 +317,14 @@
     font-weight:700;
     color:#0b7c79;
 }
+
+.packed-btn {
+  font-size: 20px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.packed-btn:hover {
+  transform: scale(1.1);
+}

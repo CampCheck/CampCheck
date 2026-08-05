@@ -7,17 +7,16 @@ import {
   FaCheck,
   FaXmark
 } from "react-icons/fa6";
+import {
+  subscribeShopping,
+  addShoppingItem,
+  updateShoppingItem,
+  deleteShoppingItem,
+  untickAllShopping,
+} from "../firebase/shopping";
 
 export default function Shopping() {
-  const [items, setItems] = useState(() => {
-  const saved =
-    JSON.parse(localStorage.getItem("shoppingList")) || [];
-
-  return saved.map(item => ({
-    ...item,
-    quantity: item.quantity ?? 1,
-  }));
-});
+  const [items, setItems] = useState([]);
   const [newItem, setNewItem] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [search, setSearch] = useState("");
@@ -25,59 +24,96 @@ export default function Shopping() {
   const [editingText, setEditingText] = useState("");
   
   useEffect(() => {
-    localStorage.setItem("shoppingList", JSON.stringify(items));
-  }, [items]);
+  const unsubscribe = subscribeShopping(
+    (shopping) => setItems(shopping),
+    (error) => console.error(error)
+  );
 
-  const addItem = () => {
-    if (!newItem.trim()) return;
-    setItems([
-      ...items,
-      {
-        id: Date.now(),
-        text: newItem.trim(),
-        quantity,
-        checked: false,
-      },
-    ]);
+  return unsubscribe;
+}, []);
+
+  const addItem = async () => {
+  if (!newItem.trim()) return;
+
+  try {
+    await addShoppingItem({
+  text: newItem.trim(),
+  quantity,
+  checked: false,
+  packed: false,
+});
+
     setNewItem("");
     setQuantity(1);
-  };
+  } catch (error) {
+    console.error(error);
+    alert("Failed to add shopping item.");
+  }
+};
 
-  const toggleItem = id =>
-    setItems(items.map(i => i.id === id ? { ...i, checked: !i.checked } : i));
+ const toggleItem = async (id) => {
+  const item = items.find(i => i.id === id);
 
-  const deleteItem = id =>
-    setItems(items.filter(i => i.id !== id));
+  if (!item) return;
+
+  await updateShoppingItem(id, {
+    checked: !item.checked,
+  });
+};
+
+  const deleteItem = async (id) => {
+  try {
+    await deleteShoppingItem(id);
+  } catch (error) {
+    console.error(error);
+    alert("Failed to delete item.");
+  }
+};
 
   function startEdit(item) {
   setEditingId(item.id);
   setEditingText(item.text);
 }
 
-function saveEdit(id) {
+async function saveEdit(id) {
   if (!editingText.trim()) return;
 
-  setItems(
-    items.map(item =>
-      item.id === id
-        ? { ...item, text: editingText.trim() }
-        : item
-    )
-  );
+  try {
+    await updateShoppingItem(id, {
+      text: editingText.trim(),
+    });
 
-  setEditingId(null);
-  setEditingText("");
+    setEditingId(null);
+    setEditingText("");
+  } catch (error) {
+    console.error(error);
+    alert("Failed to update item.");
+  }
 }
 
-  const changeQty = (id, delta) =>
-    setItems(items.map(i =>
-      i.id === id
-        ? { ...i, quantity: Math.max(1, (i.quantity ?? 1) + delta) }
-        : i
-    ));
+  const changeQty = async (id, delta) => {
+  const item = items.find(i => i.id === id);
 
-  const untickAll = () =>
-    setItems(items.map(i => ({ ...i, checked: false })));
+  if (!item) return;
+
+  try {
+    await updateShoppingItem(id, {
+      quantity: Math.max(1, (item.quantity ?? 1) + delta),
+    });
+  } catch (error) {
+    console.error(error);
+    alert("Failed to update quantity.");
+  }
+};
+
+  const untickAll = async () => {
+  try {
+    await untickAllShopping();
+  } catch (error) {
+    console.error(error);
+    alert("Failed to untick all items.");
+  }
+};
 
   const filtered = useMemo(
     () =>
@@ -192,12 +228,24 @@ function saveEdit(id) {
 ) : (
   <>
     <div className="shopping-actions">
+
   <button
-  className="edit-btn"
-  onClick={() => startEdit(item)}
+  className="packed-btn"
+  onClick={async () => {
+    await updateShoppingItem(item.id, {
+      packed: !item.packed,
+    });
+  }}
 >
-  <FaRegPenToSquare />
+  {item.packed ? "📦✅" : "📦"}
 </button>
+
+  <button
+    className="edit-btn"
+    onClick={() => startEdit(item)}
+  >
+    <FaRegPenToSquare />
+  </button>
 
   <button
     className="delete-btn"
@@ -205,6 +253,7 @@ function saveEdit(id) {
   >
     <FaRegTrashCan />
   </button>
+
 </div>
   </>
 )}
