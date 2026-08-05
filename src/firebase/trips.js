@@ -47,10 +47,16 @@ export async function getTrip(id) {
 }
 
 export async function addTrip(trip) {
-  return addDoc(tripsRef, {
+  console.log("Writing trip to Firestore:", trip);
+
+  const docRef = await addDoc(tripsRef, {
     ...trip,
     created: trip.created || new Date().toISOString(),
   });
+
+  console.log("Trip saved with ID:", docRef.id);
+
+  return docRef;
 }
 
 export async function updateTrip(id, trip) {
