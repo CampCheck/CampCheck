@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import JourneyBar from "../components/JourneyBar";
 import { FaMapMarkerAlt, FaCalendarAlt } from "react-icons/fa";
+import { subscribeTrips, deleteTrip as deleteTripFromFirestore } from "../firebase/trips";
 
 
 function Trips() {
@@ -19,13 +20,7 @@ const previousTrips = trips.filter(
 );
 
   useEffect(() => {
-    const savedTrips = JSON.parse(localStorage.getItem("trips")) || [];
-
-    savedTrips.sort(
-      (a, b) => new Date(a.arrival) - new Date(b.arrival)
-    );
-
-    setTrips(savedTrips);
+    return subscribeTrips(setTrips);
   }, []);
 
   function formatDate(date) {
@@ -46,13 +41,15 @@ const previousTrips = trips.filter(
     (tripDate - today) / (1000 * 60 * 60 * 24)
   );
 }
-function deleteTrip(id) {
+async function deleteTrip(id) {
   if (!window.confirm("Delete this trip?")) return;
 
-  const updatedTrips = trips.filter((trip) => trip.id !== id);
-
-  localStorage.setItem("trips", JSON.stringify(updatedTrips));
-  setTrips(updatedTrips);
+  try {
+    await deleteTripFromFirestore(id);
+  } catch (error) {
+    console.error(error);
+    alert("Failed to delete trip. Please try again.");
+  }
 }function getCaravanPosition(days) {
   if (days <= 0) return 100;
   if (days <= 1) return 98;

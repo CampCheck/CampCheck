@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { getTrip, addTrip, updateTrip } from "../firebase/trips";
 
 function AddTrip() {
   const navigate = useNavigate();
@@ -12,50 +13,50 @@ const { id } = useParams();
 useEffect(() => {
   if (!id) return;
 
-  const trips = JSON.parse(localStorage.getItem("trips")) || [];
-  const trip = trips.find((t) => t.id === Number(id));
+  let cancelled = false;
 
-  if (!trip) return;
+  getTrip(id).then((trip) => {
+    if (cancelled || !trip) return;
 
-  setCampsite(trip.campsite);
-  setTown(trip.town);
-  setArrival(trip.arrival);
-  setDeparture(trip.departure);
+    setCampsite(trip.campsite ?? "");
+    setTown(trip.town ?? "");
+    setArrival(trip.arrival ?? "");
+    setDeparture(trip.departure ?? "");
+  });
+
+  return () => {
+    cancelled = true;
+  };
 }, [id]);
-  function saveTrip() {
+  async function saveTrip() {
+    console.log("Save button clicked");
     if (!campsite || !arrival) {
       alert("Please enter a campsite and arrival date.");
       return;
     }
 
-    const trips = JSON.parse(localStorage.getItem("trips")) || [];
+    const tripData = {
+      campsite,
+      town,
+      arrival,
+      departure,
+    };
 
-if (id) {
-  const index = trips.findIndex((trip) => trip.id === Number(id));
+    try {
+      if (id) {
+        await updateTrip(id, tripData);
+      } else {
+        await addTrip({
+          ...tripData,
+          created: new Date().toISOString(),
+        });
+      }
 
- trips[index] = {
-  ...trips[index],
-  campsite,
-  town,
-  arrival,
-  departure,
-};
-} else {
- trips.push({
-  id: Date.now(),
-  created: new Date().toISOString(),
-  campsite,
-  town,
-  arrival,
-  departure,
-});
-}
-
-    trips.sort((a, b) => new Date(a.arrival) - new Date(b.arrival));
-
-    localStorage.setItem("trips", JSON.stringify(trips));
-
-    navigate("/trips");
+      navigate("/trips");
+    } catch (error) {
+      console.error(error);
+      alert("Failed to save trip. Please try again.");
+    }
   }
 
   return (

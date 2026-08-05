@@ -20,6 +20,7 @@ import { LuCalendarDays, LuClipboardCheck, LuShoppingBasket } from "react-icons/
 import { FaCaravan } from "react-icons/fa6";
 import { FaCampground, FaHome } from "react-icons/fa";
 import JourneyBar from "../components/JourneyBar";
+import { subscribeTrips } from "../firebase/trips";
 
 function Home() {
   const navigate = useNavigate();
@@ -54,54 +55,74 @@ const [shoppingProgress, setShoppingProgress] = useState({
   completed: 0,
 });
   useEffect(() => {
-    async function loadData() {
-      const shoppingItems =
-  JSON.parse(localStorage.getItem("shoppingList")) || [];
+    const shoppingItems =
+      JSON.parse(localStorage.getItem("shoppingList")) || [];
 
-const shoppingCompleted =
-  shoppingItems.filter((item) => item.checked).length;
+    const shoppingCompleted =
+      shoppingItems.filter((item) => item.checked).length;
 
-setShoppingProgress({
-  total: shoppingItems.length,
-  completed: shoppingCompleted,
-});
-      const trips = JSON.parse(localStorage.getItem("trips")) || [];
+    setShoppingProgress({
+      total: shoppingItems.length,
+      completed: shoppingCompleted,
+    });
+  }, []);
 
-      if (trips.length > 0) {
-        const today = new Date();
-today.setHours(0, 0, 0, 0);
+  useEffect(() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
-const upcomingTrips = trips
-  .filter((trip) => new Date(trip.departure) >= today)
-  .sort((a, b) => new Date(a.arrival) - new Date(b.arrival));
+    return subscribeTrips((trips) => {
+      const upcomingTrips = trips.filter(
+        (trip) => new Date(trip.departure) >= today
+      );
 
-if (upcomingTrips.length === 0) {
-  setTrip(null);
-  return;
-}
+      if (upcomingTrips.length === 0) {
+        setTrip(null);
+        return;
+      }
 
-const nextTrip = upcomingTrips[0];
-setTrip(nextTrip);
+      setTrip(upcomingTrips[0]);
+    });
+  }, []);
 
-        if (nextTrip.town) {
-          try {
-            setLoadingWeather(true);
-            setWeatherError(false);
+  useEffect(() => {
+    if (!trip?.town) {
+      setWeather(null);
+      setWeatherError(false);
+      setLoadingWeather(false);
+      return;
+    }
 
-            const result = await getWeather(nextTrip.town);
-            setWeather(result);
-          } catch (error) {
-            console.error(error);
-            setWeatherError(true);
-          } finally {
-            setLoadingWeather(false);
-          }
+    let cancelled = false;
+
+    async function loadWeather() {
+      try {
+        setLoadingWeather(true);
+        setWeatherError(false);
+
+        const result = await getWeather(trip.town);
+
+        if (!cancelled) {
+          setWeather(result);
+        }
+      } catch (error) {
+        if (!cancelled) {
+          console.error(error);
+          setWeatherError(true);
+        }
+      } finally {
+        if (!cancelled) {
+          setLoadingWeather(false);
         }
       }
     }
 
-    loadData();
-  }, []);
+    loadWeather();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [trip?.town]);
 
   function daysUntil(date) {
     if (!date) return null;
