@@ -34,7 +34,30 @@
 }
 
 .shopping-add{
-    display:flex;gap:10px
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    margin:15px 0;
+}
+
+.shopping-add-bottom{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+}
+
+.shopping-add input{
+    width:100%;
+    box-sizing:border-box;
+}
+
+.shopping-add > button{
+    flex-shrink:0;
+}
+
+.qty{
+    flex-shrink:0;
 }
 
 .shopping-add input{
@@ -48,7 +71,7 @@
 }
 
 .qty button,
-.shopping-add > button,
+.shopping-add-bottom button,
 .untick{
     border:none;
     border-radius:10px;
@@ -60,7 +83,7 @@
 }
 
 .qty button:hover,
-.shopping-add > button:hover,
+.shopping-add-bottom button:hover,
 .untick:hover{
     transform:translateY(-2px);
     box-shadow:0 6px 14px rgba(0,110,110,.25);

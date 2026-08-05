@@ -150,25 +150,35 @@ async function saveEdit(id) {
       />
 
       <div className="shopping-add">
-        <input
-          value={newItem}
-          placeholder="Add item..."
-          onChange={e => setNewItem(e.target.value)}
-          onKeyDown={e => e.key === "Enter" && addItem()}
-        />
+  <input
+    value={newItem}
+    placeholder="Add item..."
+    onChange={e => setNewItem(e.target.value)}
+    onKeyDown={e => e.key === "Enter" && addItem()}
+  />
 
-        <div className="qty">
-          <button onClick={() => setQuantity(Math.max(1, quantity - 1))}>-</button>
-          <span>{quantity}</span>
-          <button onClick={() => setQuantity(quantity + 1)}>+</button>
-        </div>
-
-        <button onClick={addItem}>Add</button>
-      </div>
-
-      <button className="untick" onClick={untickAll}>
-        Untick All
+  <div className="shopping-add-bottom">
+    <div className="qty">
+      <button onClick={() => setQuantity(Math.max(1, quantity - 1))}>
+        -
       </button>
+
+      <span>{quantity}</span>
+
+      <button onClick={() => setQuantity(quantity + 1)}>
+        +
+      </button>
+    </div>
+
+    <button onClick={addItem}>
+      Add
+    </button>
+  </div>
+</div>
+
+<button className="untick" onClick={untickAll}>
+  Untick All
+</button>
 
       <div className="shopping-list">
         {filtered.length === 0 ? (
