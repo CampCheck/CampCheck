@@ -61,23 +61,28 @@ useEffect(() => {
 
   return (
     <div className="container">
-      <h2>➕ Add Trip</h2>
+      <div className="shopping-title">
+  <h1>{id ? "✏️ Edit Trip" : "🚐 New Trip"}</h1>
+  <p>Plan your next adventure</p>
+</div>
 
-      <label>Campsite</label>
+<div className="card" style={{ padding: "20px" }}></div>
+
+      <label className="form-label">Campsite</label>
       <input
         placeholder="Park Cliffe Caravan Estate"
         value={campsite}
         onChange={(e) => setCampsite(e.target.value)}
       />
 
-      <label>Town / City</label>
+      <label className="form-label">Town / City</label>
       <input
         placeholder="Windermere"
         value={town}
         onChange={(e) => setTown(e.target.value)}
       />
 
-      <label>Arrival Date</label>
+      <label className="form-label">Arrival Date</label>
       <input
   type="date"
   value={arrival}
@@ -91,7 +96,7 @@ useEffect(() => {
   }}
 />
 
-      <label>Departure Date</label>
+      <label className="form-label">Departure Date</label>
       <input
   ref={departureRef}
   type="date"
@@ -100,11 +105,11 @@ useEffect(() => {
 />
 
       <button
-        onClick={saveTrip}
-        style={{ marginTop: "20px" }}
-      >
-        💾 Save Trip
-      </button>
+  className="save-trip-btn"
+  onClick={saveTrip}
+>
+  💾 {id ? "Update Trip" : "Save Trip"}
+</button>
     </div>
   );
 }
