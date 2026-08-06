@@ -10,6 +10,8 @@ import Shopping from "./pages/Shopping";
 import Settings from "./pages/Settings";
 import Departure from "./pages/Departure";
 import Arrival from "./pages/Arrival";
+import LeavingCampsite from "./pages/LeavingCampsite";
+import ArrivalHome from "./pages/ArrivalHome";
 
 function App() {
   return (
@@ -30,13 +32,17 @@ function App() {
           path="/caravan/arrival"
           element={<Arrival />}
         />
+        <Route path="/caravan/leaving" element={<LeavingCampsite />} />
+<Route path="/caravan/home" element={<ArrivalHome />} />
 
         <Route path="/shopping" element={<Shopping />} />
 
         <Route path="/settings" element={<Settings />} />
       </Route>
     </Routes>
+    
   );
 }
+
 
 export default App;

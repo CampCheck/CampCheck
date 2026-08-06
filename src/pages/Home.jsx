@@ -21,6 +21,7 @@ import { FaCaravan } from "react-icons/fa6";
 import { FaCampground, FaHome } from "react-icons/fa";
 import JourneyBar from "../components/JourneyBar";
 import { subscribeTrips } from "../firebase/trips";
+import { subscribeShopping } from "../firebase/shopping";
 
 function Home() {
   const navigate = useNavigate();
@@ -54,18 +55,22 @@ const [shoppingProgress, setShoppingProgress] = useState({
   total: 0,
   completed: 0,
 });
-  useEffect(() => {
-    const shoppingItems =
-      JSON.parse(localStorage.getItem("shoppingList")) || [];
+ useEffect(() => {
+  const unsubscribe = subscribeShopping(
+    (shoppingItems) => {
+      const shoppingCompleted =
+        shoppingItems.filter((item) => item.checked).length;
 
-    const shoppingCompleted =
-      shoppingItems.filter((item) => item.checked).length;
+      setShoppingProgress({
+        total: shoppingItems.length,
+        completed: shoppingCompleted,
+      });
+    },
+    (error) => console.error(error)
+  );
 
-    setShoppingProgress({
-      total: shoppingItems.length,
-      completed: shoppingCompleted,
-    });
-  }, []);
+  return unsubscribe;
+}, []);
 
   useEffect(() => {
     const today = new Date();
