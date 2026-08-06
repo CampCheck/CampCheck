@@ -1,30 +1,15 @@
-import ChecklistPage from "../components/ChecklistPage";
-import { arrivalChecklist } from "../data/checklists";
+import ChecklistPageFirebase from "../components/ChecklistPageFirebase";
+import { arrivalHomeChecklist } from "../data/checklists";
 
-function Arrival() {
+function ArrivalHome() {
   return (
-    <ChecklistPage
-      title="🏕️ Arrival Home"
+    <ChecklistPageFirebase
+      title="Arrival Home"
       storageKey="arrivalHomeChecklist"
-      items={arrivalChecklist}
+      items={arrivalHomeChecklist}
       backLink="/caravan"
     />
   );
 }
-[
-  "Empty caravan",
-  "Empty fridge",
-  "Leave fridge door open",
-  "Drain fresh water system",
-  "Drain water heater",
-  "Empty waste water",
-  "Empty toilet cassette",
-  "Clean toilet",
-  "Turn off battery isolator",
-  "Remove valuables",
-  "Vacuum caravan",
-  "Check for damage",
-  "Lock caravan",
-  "Book next trip",
-]
-export default Arrival;
+
+export default ArrivalHome;

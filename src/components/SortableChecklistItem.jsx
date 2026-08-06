@@ -25,32 +25,32 @@ export default function SortableChecklistItem(props) {
       style={style}
     >
       <div
-  style={{
-    display: "flex",
-    alignItems: "center",
-    gap: "10px",
-  }}
->
-  <div
-    {...attributes}
-    {...listeners}
-    style={{
-      cursor: "grab",
-      display: "flex",
-      alignItems: "center",
-    }}
-  >
-    <FaGripLines
-      style={{
-        color: "#888",
-      }}
-    />
-  </div>
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "10px",
+        }}
+      >
+        <div
+          {...attributes}
+          {...listeners}
+          style={{
+            cursor: "grab",
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <FaGripLines
+            style={{
+              color: "#888",
+            }}
+          />
+        </div>
 
-  <div style={{ flex: 1 }}>
-    <ChecklistItem {...props} />
-  </div>
-</div>
+        <div style={{ flex: 1 }}>
+          <ChecklistItem {...props} />
+        </div>
+      </div>
     </div>
   );
 }

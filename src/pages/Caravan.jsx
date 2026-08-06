@@ -28,7 +28,7 @@ const arrivalHome = getChecklistProgress(
 );
 
   return (
-    <div>
+  <div className="dashboard">
       
       <DashboardCard
   title="Before Leaving Home"

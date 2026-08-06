@@ -1,9 +1,9 @@
-import ChecklistPage from "../components/ChecklistPage";
+import ChecklistPageFirebase from "../components/ChecklistPageFirebase";
 import { departureChecklist } from "../data/checklists";
 
 function Departure() {
   return (
-    <ChecklistPage
+    <ChecklistPageFirebase
       title="Before Leaving Home"
       storageKey="departureChecklist"
       items={departureChecklist}

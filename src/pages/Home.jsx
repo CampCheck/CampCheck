@@ -202,6 +202,7 @@ if (trip?.arrival) {
             height: "auto",
             display: "block",
           }}
+      
         />
       </div>
 
