@@ -367,10 +367,9 @@ if (trip?.arrival) {
       )}
 
       <div
-  className="card trip caravan-card"
-  onClick={() => navigate("/caravan")}
+ className="card trip caravan-card"
+  onClick={() => navigate("/checklists")}
 >
-
   <div className="caravan-card-top">
     <h3>Checklists</h3>
 

@@ -1,7 +1,7 @@
 import { Outlet, NavLink, useLocation } from "react-router-dom";
 import {
   FaHome,
-  FaCaravan,
+  FaWarehouse,
   FaShoppingCart,
   FaCog,
 } from "react-icons/fa";
@@ -12,19 +12,17 @@ function Layout() {
 
   const isHome = location.pathname === "/";
 
-  
   return (
     <div className="app-layout">
-
       {!isHome && (
-  <header className="app-header">
-    <img
-      src={logo}
-      alt="CampCheck"
-      className="app-logo"
-    />
-  </header>
-)}
+        <header className="app-header">
+          <img
+            src={logo}
+            alt="CampCheck"
+            className="app-logo"
+          />
+        </header>
+      )}
 
       <main className="app-content">
         <Outlet />
@@ -38,11 +36,11 @@ function Layout() {
           <span>Home</span>
         </NavLink>
 
-        <NavLink to="/caravan">
+        <NavLink to="/garage">
           <div className="nav-icon">
-            <FaCaravan />
+            <FaWarehouse />
           </div>
-          <span>Caravan</span>
+          <span>Garage</span>
         </NavLink>
 
         <NavLink to="/shopping">

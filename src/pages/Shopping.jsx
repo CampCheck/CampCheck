@@ -115,33 +115,49 @@ async function saveEdit(id) {
   }
 };
 
-  const filtered = useMemo(
-    () =>
-      items.filter(i =>
-        i.text.toLowerCase().includes(search.toLowerCase())
-      ),
-    [items, search]
-  );
+const untickPacked = async () => {
+  try {
+    await Promise.all(
+      items
+        .filter((item) => item.packed)
+        .map((item) =>
+          updateShoppingItem(item.id, {
+            packed: false,
+          })
+        )
+    );
+  } catch (error) {
+    console.error(error);
+    alert("Failed to untick packed items.");
+  }
+};
 
-  const completed = items.filter(i => i.checked).length;
-  const percent = items.length
-    ? Math.round((completed / items.length) * 100)
-    : 0;
+const filtered = useMemo(
+  () =>
+    items.filter((i) =>
+      i.text.toLowerCase().includes(search.toLowerCase())
+    ),
+  [items, search]
+);
 
-  return (
+const completed = items.filter((i) => i.checked).length;
+const percent = items.length
+  ? Math.round((completed / items.length) * 100)
+  : 0;
+
+return (
   <div className="shopping-page">
 
- <div className="shopping-title">
-  <h1>Shopping</h1>
-  <p>Everything you need for your next trip</p>
-</div>
+    <div className="shopping-title">
+      <h1>Shopping</h1>
+      <p>Everything you need for your next trip</p>
+    </div>
 
-<div className="progress-card">
-  <div className="progress-text">
-    {completed} / {items.length} Purchased
-  </div>
-</div>
-
+    <div className="progress-card">
+      <div className="progress-text">
+        {completed} / {items.length} Purchased
+      </div>
+    </div>
       <input
         className="search"
         placeholder="Search..."
@@ -176,9 +192,15 @@ async function saveEdit(id) {
   </div>
 </div>
 
-<button className="untick" onClick={untickAll}>
-  Untick All
-</button>
+<div className="shopping-top-buttons">
+  <button className="untick" onClick={untickAll}>
+    Untick All
+  </button>
+
+  <button className="untick" onClick={untickPacked}>
+    Untick Packed
+  </button>
+</div>
 
       <div className="shopping-list">
         {filtered.length === 0 ? (
