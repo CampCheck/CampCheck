@@ -1,18 +1,37 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import "../styles/garage.css";
 import {
   FaPlus,
   FaCar,
   FaCaravan,
   FaCampground,
   FaShuttleVan,
+  FaTrash,
 } from "react-icons/fa";
 
 import {
   subscribeGarage,
   addVehicle,
+  deleteVehicle,
 } from "../firebase/garage";
 
+async function removeVehicle(vehicle) {
+  if (
+    !window.confirm(
+      `Delete "${vehicle.model || vehicle.type}"?\n\nThis cannot be undone.`
+    )
+  ) {
+    return;
+  }
+
+  try {
+    await deleteVehicle(vehicle.id);
+  } catch (err) {
+    console.error(err);
+    alert("Failed to delete vehicle.");
+  }
+}
 function Garage() {
   const navigate = useNavigate();
 
@@ -56,7 +75,7 @@ function Garage() {
   }
 
   return (
-    <div className="container">
+    <div className="garage-page">
       <div className="shopping-title">
         <h1>Garage</h1>
         <p>Manage all of your camping vehicles and equipment.</p>
@@ -137,9 +156,27 @@ function Garage() {
                 <p>{vehicle.type}</p>
               </div>
 
-              <span style={{ color: "#999", fontSize: "22px" }}>
-                ›
-              </span>
+              <div
+  style={{
+    display: "flex",
+    alignItems: "center",
+    gap: "12px",
+  }}
+>
+  <button
+    className="delete-btn"
+    onClick={(e) => {
+  e.stopPropagation();
+  removeVehicle(vehicle);
+}}
+  >
+    <FaTrash />
+  </button>
+
+  <span style={{ color: "#999", fontSize: "22px" }}>
+    
+  </span>
+</div>
             </div>
           </div>
         ))
