@@ -57,7 +57,7 @@ async function deleteTrip(id) {
     console.error(error);
     alert("Failed to delete trip. Please try again.");
   }
-}function getCaravanPosition(days) {
+}function getJourneyPosition(days) {
   if (days <= 0) return 100;
   if (days <= 1) return 98;
   if (days <= 3) return 95;
@@ -115,7 +115,7 @@ async function deleteTrip(id) {
   {formatDate(trip.arrival)} – {formatDate(trip.departure)}
 </p>
 <JourneyBar
-  progress={getCaravanPosition(daysUntil(trip.arrival))}
+  progress={getJourneyPosition(daysUntil(trip.arrival))}
 />
 
 <div className="trip-buttons">

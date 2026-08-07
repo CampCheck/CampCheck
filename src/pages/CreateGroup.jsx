@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthProvider";
 import { createCampingGroup } from "../services/groupService";
+import { campingStyles } from "../campingStyles";
 
 function CreateGroup() {
   const [groupName, setGroupName] = useState("");
@@ -56,32 +57,15 @@ function CreateGroup() {
           Camping Style
         </label>
 
-        <button
-          className={`add-checklist-btn ${
-            campingStyle === "Caravan" ? "selected" : ""
-          }`}
-          onClick={() => setCampingStyle("Caravan")}
-        >
-          🚗 Caravan
-        </button>
-
-        <button
-          className={`add-checklist-btn ${
-            campingStyle === "Tent" ? "selected" : ""
-          }`}
-          onClick={() => setCampingStyle("Tent")}
-        >
-          ⛺ Tent
-        </button>
-
-        <button
-          className={`add-checklist-btn ${
-            campingStyle === "Motorhome" ? "selected" : ""
-          }`}
-          onClick={() => setCampingStyle("Motorhome")}
-        >
-          🚐 Motorhome
-        </button>
+        {Object.values(campingStyles).map((style) => (
+          <button
+            key={style.id}
+            className={`add-checklist-btn ${campingStyle === style.id ? "selected" : ""}`}
+            onClick={() => setCampingStyle(style.id)}
+          >
+            {style.icons.departure} {style.label}
+          </button>
+        ))}
 
         <button
           className="save-trip-btn"

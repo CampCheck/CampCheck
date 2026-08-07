@@ -1,15 +1,5 @@
-import ChecklistPageFirebase from "../components/ChecklistPageFirebase";
-import { arrivalChecklist } from "../data/checklists";
+import DynamicChecklistPage from "../components/DynamicChecklistPage";
 
-function Arrival() {
-  return (
-    <ChecklistPageFirebase
-      title="Arrival at Campsite"
-      storageKey="arrivalChecklist"
-      items={arrivalChecklist}
-      backLink="/caravan"
-    />
-  );
+export default function Arrival() {
+  return <DynamicChecklistPage checklistKey="arrival" />;
 }
-
-export default Arrival;

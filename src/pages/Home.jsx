@@ -15,11 +15,6 @@ import {
 
 import logo from "../assets/campcheck-logo.png";
 
-import {
-  departureChecklist,
-  arrivalChecklist,
-} from "../data/checklists";
-
 import { HiOutlineShoppingBag } from "react-icons/hi2";
 import {
   LuCalendarDays,
@@ -31,10 +26,12 @@ import { subscribeTrips } from "../firebase/trips";
 import { subscribeShopping } from "../firebase/shopping";
 import { initialiseChecklist, subscribeChecklist } from "../firebase/checklists";
 import { useGroup } from "../auth/GroupProvider";
+import { getCampingStyle } from "../campingStyles";
 
 function Home() {
   const navigate = useNavigate();
-  const { groupId } = useGroup();
+  const { groupId, campingStyle } = useGroup();
+  const style = getCampingStyle(campingStyle);
 
   const [trip, setTrip] = useState(null);
   const [weather, setWeather] = useState(null);
@@ -46,10 +43,7 @@ function Home() {
     total: 0,
     completed: 0,
   });
-  const [checklistProgress, setChecklistProgress] = useState({
-    departure: { completed: 0, total: departureChecklist.length },
-    arrival: { completed: 0, total: arrivalChecklist.length },
-  });
+  const [checklistProgress, setChecklistProgress] = useState({});
 
   useEffect(() => {
     if (!groupId) return undefined;
@@ -73,13 +67,9 @@ function Home() {
   useEffect(() => {
     if (!groupId) return undefined;
 
-    const types = [
-      ["departure", "departureChecklist", departureChecklist],
-      ["arrival", "arrivalChecklist", arrivalChecklist],
-    ];
-    const unsubscribers = types.map(([key, type, defaults]) => {
-      initialiseChecklist(groupId, type, defaults).catch(console.error);
-      return subscribeChecklist(groupId, type, (items) => {
+    const unsubscribers = Object.entries(style.checklists).map(([key, checklist]) => {
+      initialiseChecklist(groupId, checklist.id, checklist.items).catch(console.error);
+      return subscribeChecklist(groupId, checklist.id, (items) => {
         setChecklistProgress((current) => ({
           ...current,
           [key]: { total: items.length, completed: items.filter((item) => item.checked).length },
@@ -88,7 +78,7 @@ function Home() {
     });
 
     return () => unsubscribers.forEach((unsubscribe) => unsubscribe());
-  }, [groupId]);
+  }, [groupId, style]);
 
   useEffect(() => {
     if (!groupId) return;
@@ -182,32 +172,29 @@ const shoppingPercent =
         (shoppingProgress.completed / shoppingProgress.total) * 100
       )
     : 0;
-const caravanCompleted = checklistProgress.departure.completed + checklistProgress.arrival.completed;
-const caravanTotal = checklistProgress.departure.total + checklistProgress.arrival.total;
-const caravanPercent = caravanTotal ? Math.round((caravanCompleted / caravanTotal) * 100) : 0;
-    let caravanPosition = 0;
+    let journeyPosition = 0;
 
 if (trip?.arrival) {
   const days = daysUntil(trip.arrival);
 
  if (days <= 0) {
-  caravanPosition = 97;
+  journeyPosition = 97;
 } else if (days <= 1) {
-  caravanPosition = 95;
+  journeyPosition = 95;
 } else if (days <= 3) {
-  caravanPosition = 92;
+  journeyPosition = 92;
 } else if (days <= 7) {
-  caravanPosition = 88;
+  journeyPosition = 88;
 } else if (days <= 14) {
-  caravanPosition = 82;
+  journeyPosition = 82;
 } else if (days <= 30) {
-  caravanPosition = 60;
+  journeyPosition = 60;
 } else if (days <= 65) {
-  caravanPosition = 40;
+  journeyPosition = 40;
 } else if (days <= 90) {
-  caravanPosition = 25;
+  journeyPosition = 25;
 } else {
-  caravanPosition = 2;
+  journeyPosition = 2;
 }
 }
   return (
@@ -373,7 +360,7 @@ if (trip?.arrival) {
 
 
   <JourneyBar
-  progress={caravanPosition}
+  progress={journeyPosition}
 />
         </div>
         
@@ -394,33 +381,21 @@ if (trip?.arrival) {
         </div>
       )}
 
-      <div
- className="card trip caravan-card"
-  onClick={() => navigate("/checklists")}
->
-  <div className="caravan-card-top">
-    <h3>Checklists</h3>
-
-    <div className="caravan-card-icon">
-      <LuClipboardCheck />
-    </div>
-  </div>
-
-  <div className="caravan-progress-text">
-    {caravanCompleted} of {caravanTotal} completed
-  </div>
-
-  <div className="caravan-progress-bar">
-    <div
-      className="caravan-progress-fill"
-      style={{ width: `${caravanPercent}%` }}
-    />
-  </div>
-
-  <div className="caravan-progress-percent">
-    {caravanPercent}% complete
-  </div>
-</div>
+      {Object.entries(style.checklists).map(([key, checklist]) => {
+        const progress = checklistProgress[key] || { completed: 0, total: checklist.items.length };
+        const percent = progress.total ? Math.round((progress.completed / progress.total) * 100) : 0;
+        return (
+          <div key={key} className="card trip caravan-card" onClick={() => navigate("/checklists")}>
+            <div className="caravan-card-top">
+              <h3>{checklist.title}</h3>
+              <div className="caravan-card-icon"><LuClipboardCheck /></div>
+            </div>
+            <div className="caravan-progress-text">{progress.completed} of {progress.total} completed</div>
+            <div className="caravan-progress-bar"><div className="caravan-progress-fill" style={{ width: `${percent}%` }} /></div>
+            <div className="caravan-progress-percent">{percent}% complete</div>
+          </div>
+        );
+      })}
 
       <div
   className="card shopping-card"

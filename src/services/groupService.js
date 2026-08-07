@@ -9,6 +9,8 @@ import {
   where,
   limit,
   onSnapshot,
+  updateDoc,
+  deleteDoc,
 } from "firebase/firestore";
 
 import { db } from "../firebase/firebase";
@@ -43,14 +45,6 @@ export async function createCampingGroup(user, name, campingStyle) {
   );
 
   await setDoc(
-    doc(db, "users", user.uid),
-    {
-      currentGroupId: groupRef.id,
-      joinedAt: serverTimestamp(),
-    }
-  );
-
-  await setDoc(
     doc(
       db,
       "campingGroups",
@@ -60,6 +54,15 @@ export async function createCampingGroup(user, name, campingStyle) {
     ),
     {
       role: "owner",
+      joinedAt: serverTimestamp(),
+      displayName: "Owner",
+    }
+  );
+
+  await setDoc(
+    doc(db, "users", user.uid),
+    {
+      currentGroupId: groupRef.id,
       joinedAt: serverTimestamp(),
     }
   );
@@ -83,6 +86,7 @@ export async function joinCampingGroup(user, code) {
   await setDoc(doc(db, "campingGroups", group.id, "members", user.uid), {
     role: "member",
     joinedAt: serverTimestamp(),
+    displayName: "Member",
   }, { merge: true });
   await setDoc(doc(db, "users", user.uid), {
     currentGroupId: group.id,
@@ -101,4 +105,21 @@ export function subscribeGroupMembers(groupId, callback, onError) {
   return onSnapshot(collection(db, "campingGroups", groupId, "members"), (snapshot) => {
     callback(snapshot.docs.map((member) => ({ uid: member.id, ...member.data() })));
   }, onError);
+}
+
+export async function updateCampingStyle(groupId, campingStyle) {
+  await updateDoc(doc(db, "campingGroups", groupId), { campingStyle });
+}
+
+export async function regenerateInviteCode(groupId) {
+  let inviteCode = generateInviteCode();
+  while ((await getDocs(query(collection(db, "campingGroups"), where("inviteCode", "==", inviteCode), limit(1)))).size) {
+    inviteCode = generateInviteCode();
+  }
+  await updateDoc(doc(db, "campingGroups", groupId), { inviteCode });
+  return inviteCode;
+}
+
+export async function removeGroupMember(groupId, memberId) {
+  await deleteDoc(doc(db, "campingGroups", groupId, "members", memberId));
 }

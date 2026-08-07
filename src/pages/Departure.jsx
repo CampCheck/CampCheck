@@ -1,15 +1,5 @@
-import ChecklistPageFirebase from "../components/ChecklistPageFirebase";
-import { departureChecklist } from "../data/checklists";
+import DynamicChecklistPage from "../components/DynamicChecklistPage";
 
-function Departure() {
-  return (
-    <ChecklistPageFirebase
-      title="Before Leaving Home"
-      storageKey="departureChecklist"
-      items={departureChecklist}
-      backLink="/caravan"
-    />
-  );
+export default function Departure() {
+  return <DynamicChecklistPage checklistKey="departure" />;
 }
-
-export default Departure;

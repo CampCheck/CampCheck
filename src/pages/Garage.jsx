@@ -1,192 +1,95 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { FaPlus, FaTrash } from "react-icons/fa";
 import "../styles/garage.css";
-import {
-  FaPlus,
-  FaCar,
-  FaCaravan,
-  FaCampground,
-  FaShuttleVan,
-  FaTrash,
-} from "react-icons/fa";
-
-import {
-  subscribeGarage,
-  addVehicle,
-  deleteVehicle,
-} from "../firebase/garage";
+import { addVehicle, deleteVehicle, subscribeGarage } from "../firebase/garage";
 import { useGroup } from "../auth/GroupProvider";
-
-async function removeVehicle(groupId, vehicle) {
-  if (
-    !window.confirm(
-      `Delete "${vehicle.model || vehicle.type}"?\n\nThis cannot be undone.`
-    )
-  ) {
-    return;
-  }
-
-  try {
-    await deleteVehicle(groupId, vehicle.id);
-  } catch (err) {
-    console.error(err);
-    alert("Failed to delete vehicle.");
-  }
-}
+import { getCampingStyle } from "../campingStyles";
 
 function Garage() {
   const navigate = useNavigate();
-
-  const { groupId } = useGroup();
-
+  const { groupId, campingStyle } = useGroup();
+  const style = getCampingStyle(campingStyle);
   const [showSelector, setShowSelector] = useState(false);
   const [vehicles, setVehicles] = useState([]);
 
   useEffect(() => {
-    if (!groupId) return;
-
-    const unsubscribe = subscribeGarage(
-      groupId,
-      setVehicles,
-      console.error
-    );
-
-    return unsubscribe;
+    if (!groupId) return undefined;
+    return subscribeGarage(groupId, setVehicles, console.error);
   }, [groupId]);
 
-  function vehicleIcon(type) {
-    switch (type) {
-      case "Tow Car":
-        return <FaCar />;
-      case "Caravan":
-        return <FaCaravan />;
-      case "Tent":
-        return <FaCampground />;
-      case "Motorhome":
-        return <FaShuttleVan />;
-      default:
-        return <FaCar />;
+  async function createVehicle(vehicleType) {
+    try {
+      await addVehicle(groupId, {
+        type: vehicleType.type,
+        manufacturer: "",
+        model: vehicleType.defaultModel,
+        year: "",
+        created: Date.now(),
+      });
+      setShowSelector(false);
+    } catch (error) {
+      console.error(error);
+      alert("Failed to add vehicle.");
     }
   }
 
-  async function createVehicle(type) {
-    await addVehicle(groupId, {
-      type,
-      manufacturer: "",
-      model: `New ${type}`,
-      year: "",
-      created: Date.now(),
-    });
-
-    setShowSelector(false);
+  async function removeVehicle(event, vehicle) {
+    event.stopPropagation();
+    if (!window.confirm(`Delete "${vehicle.model || vehicle.type}"?\n\nThis cannot be undone.`)) return;
+    try {
+      await deleteVehicle(groupId, vehicle.id);
+    } catch (error) {
+      console.error(error);
+      alert("Failed to delete vehicle.");
+    }
   }
+
   return (
     <div className="garage-page">
       <div className="shopping-title">
         <h1>Garage</h1>
-        <p>Manage all of your camping vehicles and equipment.</p>
+        <p>Manage your {style.label.toLowerCase()} vehicles and equipment.</p>
       </div>
 
-      <button
-        className="add-checklist-btn"
-        onClick={() => setShowSelector(true)}
-      >
+      <button className="add-checklist-btn" onClick={() => setShowSelector(true)}>
         <FaPlus /> Add Vehicle
       </button>
 
       {showSelector && (
         <div className="dashboard-card">
           <h3>Select Vehicle Type</h3>
-
-          <button
-            className="add-checklist-btn"
-            onClick={() => createVehicle("Tow Car")}
-          >
-            🚗 Tow Car
-          </button>
-
-          <button
-            className="add-checklist-btn"
-            onClick={() => createVehicle("Caravan")}
-          >
-            🚐 Caravan
-          </button>
-
-          <button
-            className="add-checklist-btn"
-            onClick={() => createVehicle("Tent")}
-          >
-            ⛺ Tent
-          </button>
-
-          <button
-            className="add-checklist-btn"
-            onClick={() => createVehicle("Motorhome")}
-          >
-            🚍 Motorhome
-          </button>
-
-          <button
-            className="untick"
-            onClick={() => setShowSelector(false)}
-          >
-            Cancel
-          </button>
+          {style.garageTypes.map((vehicleType) => (
+            <button key={vehicleType.type} className="add-checklist-btn" onClick={() => createVehicle(vehicleType)}>
+              {vehicleType.icon} {vehicleType.type}
+            </button>
+          ))}
+          <button className="untick" onClick={() => setShowSelector(false)}>Cancel</button>
         </div>
       )}
 
       {vehicles.length === 0 ? (
         <div className="dashboard-card">
           <h3>No vehicles added yet</h3>
-          <p>Tap "Add Vehicle" to get started.</p>
+          <p>Tap “Add Vehicle” to get started.</p>
         </div>
-      ) : (
-        vehicles.map((vehicle) => (
-          <div
-            key={vehicle.id}
-            className="dashboard-card"
-            onClick={() => navigate(`/garage/${vehicle.id}`)}
-            style={{ cursor: "pointer" }}
-          >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "12px",
-              }}
-            >
-              {vehicleIcon(vehicle.type)}
-
+      ) : vehicles.map((vehicle) => {
+        const type = style.garageTypes.find((item) => item.type === vehicle.type);
+        return (
+          <div key={vehicle.id} className="dashboard-card" onClick={() => navigate(`/garage/${vehicle.id}`)} style={{ cursor: "pointer" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+              <span style={{ fontSize: "24px" }}>{type?.icon || "🚗"}</span>
               <div style={{ flex: 1 }}>
                 <h3>{vehicle.model || "Unnamed Vehicle"}</h3>
                 <p>{vehicle.type}</p>
               </div>
-
-              <div
-  style={{
-    display: "flex",
-    alignItems: "center",
-    gap: "12px",
-  }}
->
-  <button
-    className="delete-btn"
-    onClick={(e) => {
-  e.stopPropagation();
-  removeVehicle(groupId, vehicle);
-}}
-  >
-    <FaTrash />
-  </button>
-
-  <span style={{ color: "#999", fontSize: "22px" }}>
-    
-  </span>
-</div>
+              <button className="delete-btn" onClick={(event) => removeVehicle(event, vehicle)} aria-label={`Delete ${vehicle.model || vehicle.type}`}>
+                <FaTrash />
+              </button>
             </div>
           </div>
-        ))
-      )}
+        );
+      })}
     </div>
   );
 }

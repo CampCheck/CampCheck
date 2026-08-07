@@ -11,6 +11,11 @@ service cloud.firestore {
         && exists(/databases/$(database)/documents/campingGroups/$(groupId)/members/$(request.auth.uid));
     }
 
+    function migrationPending() {
+      return signedIn()
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.dataMigrated != true;
+    }
+
     match /users/{userId} {
       allow read, create, update: if signedIn() && request.auth.uid == userId;
       allow delete: if false;
@@ -29,7 +34,11 @@ service cloud.firestore {
       match /members/{userId} {
         allow read: if isMember(groupId);
         allow create: if signedIn() && request.auth.uid == userId;
-        allow update, delete: if isMember(groupId)
+        allow update: if (signedIn() && request.auth.uid == userId
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(["online", "lastSeen"]))
+          || (isMember(groupId)
+          && get(/databases/$(database)/documents/campingGroups/$(groupId)).data.owner == request.auth.uid);
+        allow delete: if isMember(groupId)
           && get(/databases/$(database)/documents/campingGroups/$(groupId)).data.owner == request.auth.uid;
       }
 
@@ -39,6 +48,33 @@ service cloud.firestore {
 
       match /checklists/{checklistId}/items/{itemId} {
         allow read, create, update, delete: if isMember(groupId);
+      }
+    }
+
+    // Legacy data is read-only and only accessible during this user's first
+    // migration. It is never deleted or altered by the migration.
+    match /garage/{documentId} {
+      allow read: if migrationPending();
+      allow write: if false;
+    }
+
+    match /trips/{documentId} {
+      allow read: if migrationPending();
+      allow write: if false;
+    }
+
+    match /shopping/{documentId} {
+      allow read: if migrationPending();
+      allow write: if false;
+    }
+
+    match /checklists/{checklistId} {
+      allow read: if migrationPending();
+      allow write: if false;
+
+      match /items/{itemId} {
+        allow read: if migrationPending();
+        allow write: if false;
       }
     }
   }

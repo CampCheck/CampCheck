@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Routes, Route } from "react-router-dom";
 
 import Layout from "./components/Layout";
@@ -19,10 +20,44 @@ import CreateGroup from "./pages/CreateGroup";
 import JoinGroup from "./pages/JoinGroup";
 import { Navigate } from "react-router-dom";
 import { useGroup } from "./auth/GroupProvider";
+import { useAuth } from "./auth/AuthProvider";
+import { migrateLegacyData } from "./services/migrateLegacyData";
 
 function StartupRoute() {
   const { groupId } = useGroup();
-  return groupId ? <Home /> : <Navigate to="/welcome" replace />;
+  const { user } = useAuth();
+  const [migrationState, setMigrationState] = useState("idle");
+
+  useEffect(() => {
+    if (!user || !groupId) return undefined;
+
+    let cancelled = false;
+    setMigrationState("migrating");
+
+    migrateLegacyData(user.uid, groupId)
+      .then((result) => {
+        if (cancelled) return;
+        if (result.copied > 0) {
+          setMigrationState("complete");
+          window.setTimeout(() => !cancelled && setMigrationState("ready"), 1200);
+        } else {
+          setMigrationState("ready");
+        }
+      })
+      .catch((error) => {
+        console.error("Unable to migrate legacy data", error);
+        if (!cancelled) setMigrationState("ready");
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [groupId, user]);
+
+  if (!groupId) return <Navigate to="/welcome" replace />;
+  if (migrationState === "migrating") return <div className="container">Migrating your data...</div>;
+  if (migrationState === "complete") return <div className="container">Your data has been migrated.</div>;
+  return <Home />;
 }
 function App() {
   return (
