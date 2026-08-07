@@ -15,8 +15,9 @@ import {
   addVehicle,
   deleteVehicle,
 } from "../firebase/garage";
+import { useGroup } from "../auth/GroupProvider";
 
-async function removeVehicle(vehicle) {
+async function removeVehicle(groupId, vehicle) {
   if (
     !window.confirm(
       `Delete "${vehicle.model || vehicle.type}"?\n\nThis cannot be undone.`
@@ -26,44 +27,50 @@ async function removeVehicle(vehicle) {
   }
 
   try {
-    await deleteVehicle(vehicle.id);
+    await deleteVehicle(groupId, vehicle.id);
   } catch (err) {
     console.error(err);
     alert("Failed to delete vehicle.");
   }
 }
+
 function Garage() {
   const navigate = useNavigate();
+
+  const { groupId } = useGroup();
 
   const [showSelector, setShowSelector] = useState(false);
   const [vehicles, setVehicles] = useState([]);
 
   useEffect(() => {
+    if (!groupId) return;
+
     const unsubscribe = subscribeGarage(
+      groupId,
       setVehicles,
       console.error
     );
 
     return unsubscribe;
-  }, []);
+  }, [groupId]);
 
   function vehicleIcon(type) {
     switch (type) {
       case "Tow Car":
-        return <FaCar size={28} color="#39a64b" />;
+        return <FaCar />;
       case "Caravan":
-        return <FaCaravan size={28} color="#39a64b" />;
+        return <FaCaravan />;
       case "Tent":
-        return <FaCampground size={28} color="#39a64b" />;
+        return <FaCampground />;
       case "Motorhome":
-        return <FaShuttleVan size={28} color="#39a64b" />;
+        return <FaShuttleVan />;
       default:
-        return <FaCar size={28} color="#39a64b" />;
+        return <FaCar />;
     }
   }
 
   async function createVehicle(type) {
-    await addVehicle({
+    await addVehicle(groupId, {
       type,
       manufacturer: "",
       model: `New ${type}`,
@@ -73,7 +80,6 @@ function Garage() {
 
     setShowSelector(false);
   }
-
   return (
     <div className="garage-page">
       <div className="shopping-title">
@@ -167,7 +173,7 @@ function Garage() {
     className="delete-btn"
     onClick={(e) => {
   e.stopPropagation();
-  removeVehicle(vehicle);
+  removeVehicle(groupId, vehicle);
 }}
   >
     <FaTrash />

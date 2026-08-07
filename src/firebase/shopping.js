@@ -13,7 +13,24 @@ import {
 
 import { db } from "./firebase";
 
-const shoppingRef = collection(db, "shopping");
+function shoppingRef(groupId) {
+  return collection(
+    db,
+    "campingGroups",
+    groupId,
+    "shopping"
+  );
+}
+
+function shoppingDoc(groupId, id) {
+  return doc(
+    db,
+    "campingGroups",
+    groupId,
+    "shopping",
+    id
+  );
+}
 
 function mapDoc(docSnap) {
   return {
@@ -22,14 +39,15 @@ function mapDoc(docSnap) {
   };
 }
 
-export function subscribeShopping(callback, onError) {
-  const q = query(shoppingRef, orderBy("text"));
+export function subscribeShopping(groupId, callback, onError) {
+  const q = query(
+    shoppingRef(groupId),
+    orderBy("text")
+  );
 
   return onSnapshot(
     q,
-    (snapshot) => {
-      callback(snapshot.docs.map(mapDoc));
-    },
+    (snapshot) => callback(snapshot.docs.map(mapDoc)),
     (error) => {
       console.error(error);
       onError?.(error);
@@ -37,20 +55,27 @@ export function subscribeShopping(callback, onError) {
   );
 }
 
-export async function addShoppingItem(item) {
-  return addDoc(shoppingRef, item);
+export async function addShoppingItem(groupId, item) {
+  return addDoc(shoppingRef(groupId), item);
 }
 
-export async function updateShoppingItem(id, updates) {
-  return updateDoc(doc(db, "shopping", id), updates);
+export async function updateShoppingItem(groupId, id, updates) {
+  return updateDoc(
+    shoppingDoc(groupId, id),
+    updates
+  );
 }
 
-export async function deleteShoppingItem(id) {
-  return deleteDoc(doc(db, "shopping", id));
+export async function deleteShoppingItem(groupId, id) {
+  return deleteDoc(
+    shoppingDoc(groupId, id)
+  );
 }
 
-export async function untickAllShopping() {
-  const snapshot = await getDocs(shoppingRef);
+export async function untickAllShopping(groupId) {
+  const snapshot = await getDocs(
+    shoppingRef(groupId)
+  );
 
   const batch = writeBatch(db);
 

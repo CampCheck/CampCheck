@@ -3,6 +3,7 @@ import {
   collection,
   addDoc,
   doc,
+  getDoc,
   updateDoc,
   deleteDoc,
   query,
@@ -10,8 +11,23 @@ import {
   onSnapshot,
 } from "firebase/firestore";
 
-function garageRef() {
-  return collection(db, "garage");
+function garageRef(groupId) {
+  return collection(
+    db,
+    "campingGroups",
+    groupId,
+    "garage"
+  );
+}
+
+function vehicleDoc(groupId, vehicleId) {
+  return doc(
+    db,
+    "campingGroups",
+    groupId,
+    "garage",
+    vehicleId
+  );
 }
 
 function mapDoc(docSnap) {
@@ -21,8 +37,11 @@ function mapDoc(docSnap) {
   };
 }
 
-export function subscribeGarage(callback, onError) {
-  const q = query(garageRef(), orderBy("created"));
+export function subscribeGarage(groupId, callback, onError) {
+  const q = query(
+    garageRef(groupId),
+    orderBy("created")
+  );
 
   return onSnapshot(
     q,
@@ -34,8 +53,8 @@ export function subscribeGarage(callback, onError) {
   );
 }
 
-export async function addVehicle(vehicle) {
-  return addDoc(garageRef(), {
+export async function addVehicle(groupId, vehicle) {
+  return addDoc(garageRef(groupId), {
     manufacturer: "",
     model: "",
     year: "",
@@ -46,10 +65,20 @@ export async function addVehicle(vehicle) {
   });
 }
 
-export async function updateVehicle(id, data) {
-  return updateDoc(doc(db, "garage", id), data);
+export async function updateVehicle(groupId, id, data) {
+  return updateDoc(
+    vehicleDoc(groupId, id),
+    data
+  );
 }
 
-export async function deleteVehicle(id) {
-  return deleteDoc(doc(db, "garage", id));
+export async function deleteVehicle(groupId, id) {
+  return deleteDoc(
+    vehicleDoc(groupId, id)
+  );
+}
+
+export async function getVehicle(groupId, id) {
+  const snapshot = await getDoc(vehicleDoc(groupId, id));
+  return snapshot.exists() ? mapDoc(snapshot) : null;
 }

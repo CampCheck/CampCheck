@@ -12,7 +12,24 @@ import {
 
 import { db } from "./firebase";
 
-const tripsRef = collection(db, "trips");
+function tripsRef(groupId) {
+  return collection(
+    db,
+    "campingGroups",
+    groupId,
+    "trips"
+  );
+}
+
+function tripDoc(groupId, tripId) {
+  return doc(
+    db,
+    "campingGroups",
+    groupId,
+    "trips",
+    tripId
+  );
+}
 
 function mapDoc(docSnap) {
   return {
@@ -21,8 +38,11 @@ function mapDoc(docSnap) {
   };
 }
 
-export function subscribeTrips(callback, onError) {
-  const q = query(tripsRef, orderBy("arrival"));
+export function subscribeTrips(groupId, callback, onError) {
+  const q = query(
+    tripsRef(groupId),
+    orderBy("arrival")
+  );
 
   return onSnapshot(
     q,
@@ -36,8 +56,10 @@ export function subscribeTrips(callback, onError) {
   );
 }
 
-export async function getTrip(id) {
-  const docSnap = await getDoc(doc(db, "trips", id));
+export async function getTrip(groupId, id) {
+  const docSnap = await getDoc(
+    tripDoc(groupId, id)
+  );
 
   if (!docSnap.exists()) {
     return null;
@@ -46,23 +68,22 @@ export async function getTrip(id) {
   return mapDoc(docSnap);
 }
 
-export async function addTrip(trip) {
-  console.log("Writing trip to Firestore:", trip);
-
-  const docRef = await addDoc(tripsRef, {
+export async function addTrip(groupId, trip) {
+  return addDoc(tripsRef(groupId), {
     ...trip,
     created: trip.created || new Date().toISOString(),
   });
-
-  console.log("Trip saved with ID:", docRef.id);
-
-  return docRef;
 }
 
-export async function updateTrip(id, trip) {
-  await updateDoc(doc(db, "trips", id), trip);
+export async function updateTrip(groupId, id, trip) {
+  await updateDoc(
+    tripDoc(groupId, id),
+    trip
+  );
 }
 
-export async function deleteTrip(id) {
-  await deleteDoc(doc(db, "trips", id));
+export async function deleteTrip(groupId, id) {
+  await deleteDoc(
+    tripDoc(groupId, id)
+  );
 }

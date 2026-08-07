@@ -3,10 +3,11 @@ import { useNavigate } from "react-router-dom";
 import JourneyBar from "../components/JourneyBar";
 import { FaMapMarkerAlt, FaCalendarAlt } from "react-icons/fa";
 import { subscribeTrips, deleteTrip as deleteTripFromFirestore } from "../firebase/trips";
-
+import { useGroup } from "../auth/GroupProvider";
 
 function Trips() {
   const navigate = useNavigate();
+  const { groupId } = useGroup();
   const [trips, setTrips] = useState([]);
   const today = new Date();
 today.setHours(0, 0, 0, 0);
@@ -20,8 +21,14 @@ const previousTrips = trips.filter(
 );
 
   useEffect(() => {
-    return subscribeTrips(setTrips);
-  }, []);
+  if (!groupId) return;
+
+  return subscribeTrips(
+    groupId,
+    setTrips,
+    console.error
+  );
+}, [groupId]);
 
   function formatDate(date) {
     return new Date(date).toLocaleDateString("en-GB", {
@@ -45,7 +52,7 @@ async function deleteTrip(id) {
   if (!window.confirm("Delete this trip?")) return;
 
   try {
-    await deleteTripFromFirestore(id);
+    await deleteTripFromFirestore(groupId, id);
   } catch (error) {
     console.error(error);
     alert("Failed to delete trip. Please try again.");

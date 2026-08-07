@@ -14,8 +14,10 @@ import {
   deleteShoppingItem,
   untickAllShopping,
 } from "../firebase/shopping";
+import { useGroup } from "../auth/GroupProvider";
 
 export default function Shopping() {
+  const { groupId } = useGroup();
   const [items, setItems] = useState([]);
   const [newItem, setNewItem] = useState("");
   const [quantity, setQuantity] = useState(1);
@@ -24,19 +26,21 @@ export default function Shopping() {
   const [editingText, setEditingText] = useState("");
   
   useEffect(() => {
+  if (!groupId) return undefined;
   const unsubscribe = subscribeShopping(
+    groupId,
     (shopping) => setItems(shopping),
     (error) => console.error(error)
   );
 
   return unsubscribe;
-}, []);
+}, [groupId]);
 
   const addItem = async () => {
   if (!newItem.trim()) return;
 
   try {
-    await addShoppingItem({
+    await addShoppingItem(groupId, {
   text: newItem.trim(),
   quantity,
   checked: false,
@@ -56,14 +60,14 @@ export default function Shopping() {
 
   if (!item) return;
 
-  await updateShoppingItem(id, {
+  await updateShoppingItem(groupId, id, {
     checked: !item.checked,
   });
 };
 
   const deleteItem = async (id) => {
   try {
-    await deleteShoppingItem(id);
+    await deleteShoppingItem(groupId, id);
   } catch (error) {
     console.error(error);
     alert("Failed to delete item.");
@@ -79,7 +83,7 @@ async function saveEdit(id) {
   if (!editingText.trim()) return;
 
   try {
-    await updateShoppingItem(id, {
+    await updateShoppingItem(groupId, id, {
       text: editingText.trim(),
     });
 
@@ -97,7 +101,7 @@ async function saveEdit(id) {
   if (!item) return;
 
   try {
-    await updateShoppingItem(id, {
+    await updateShoppingItem(groupId, id, {
       quantity: Math.max(1, (item.quantity ?? 1) + delta),
     });
   } catch (error) {
@@ -108,7 +112,7 @@ async function saveEdit(id) {
 
   const untickAll = async () => {
   try {
-    await untickAllShopping();
+    await untickAllShopping(groupId);
   } catch (error) {
     console.error(error);
     alert("Failed to untick all items.");
@@ -121,7 +125,7 @@ const untickPacked = async () => {
       items
         .filter((item) => item.packed)
         .map((item) =>
-          updateShoppingItem(item.id, {
+          updateShoppingItem(groupId, item.id, {
             packed: false,
           })
         )
@@ -141,10 +145,6 @@ const filtered = useMemo(
 );
 
 const completed = items.filter((i) => i.checked).length;
-const percent = items.length
-  ? Math.round((completed / items.length) * 100)
-  : 0;
-
 return (
   <div className="shopping-page">
 
@@ -264,7 +264,7 @@ return (
   <button
   className="packed-btn"
   onClick={async () => {
-    await updateShoppingItem(item.id, {
+    await updateShoppingItem(groupId, item.id, {
       packed: !item.packed,
     });
   }}

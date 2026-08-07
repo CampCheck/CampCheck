@@ -16,16 +16,19 @@ import "./styles/dialog.css";
 import "./styles/Trips.css";
 import "./styles/Caravan.css";
 import "./styles/Weather.css";
-
+import { AuthProvider } from "./auth/AuthProvider";
+import { GroupProvider } from "./auth/GroupProvider";
 
 registerSW({
   immediate: true,
 });
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
+  <AuthProvider>
+  <GroupProvider>
     <BrowserRouter basename={import.meta.env.BASE_URL}>
-  <App />
-</BrowserRouter>
-  </React.StrictMode>
+      <App />
+    </BrowserRouter>
+  </GroupProvider>
+</AuthProvider>
 );

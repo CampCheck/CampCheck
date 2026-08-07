@@ -12,8 +12,12 @@ import {
   getDocs,
 } from "firebase/firestore";
 
-function checklistRef(type) {
-  return collection(db, "checklists", type, "items");
+function checklistRef(groupId, type) {
+  return collection(db, "campingGroups", groupId, "checklists", type, "items");
+}
+
+function checklistDoc(groupId, type, id) {
+  return doc(db, "campingGroups", groupId, "checklists", type, "items", id);
 }
 
 function mapDoc(docSnap) {
@@ -23,8 +27,8 @@ function mapDoc(docSnap) {
   };
 }
 
-export function subscribeChecklist(type, callback, onError) {
-  const q = query(checklistRef(type), orderBy("order"));
+export function subscribeChecklist(groupId, type, callback, onError) {
+  const q = query(checklistRef(groupId, type), orderBy("order"));
 
   return onSnapshot(
     q,
@@ -38,29 +42,24 @@ export function subscribeChecklist(type, callback, onError) {
   );
 }
 
-export async function addChecklistItem(type, item) {
-  return addDoc(checklistRef(type), item);
+export async function addChecklistItem(groupId, type, item) {
+  return addDoc(checklistRef(groupId, type), item);
 }
 
-export async function updateChecklistItem(type, id, data) {
-  return updateDoc(
-    doc(db, "checklists", type, "items", id),
-    data
-  );
+export async function updateChecklistItem(groupId, type, id, data) {
+  return updateDoc(checklistDoc(groupId, type, id), data);
 }
 
-export async function deleteChecklistItem(type, id) {
-  return deleteDoc(
-    doc(db, "checklists", type, "items", id)
-  );
+export async function deleteChecklistItem(groupId, type, id) {
+  return deleteDoc(checklistDoc(groupId, type, id));
 }
 
-export async function updateChecklistOrder(type, items) {
+export async function updateChecklistOrder(groupId, type, items) {
   const batch = writeBatch(db);
 
   items.forEach((item, index) => {
     batch.update(
-      doc(db, "checklists", type, "items", item.id),
+      checklistDoc(groupId, type, item.id),
       {
         order: index,
       }
@@ -70,8 +69,8 @@ export async function updateChecklistOrder(type, items) {
   await batch.commit();
 }
 
-export async function initialiseChecklist(type, defaultItems) {
-  const snapshot = await getDocs(checklistRef(type));
+export async function initialiseChecklist(groupId, type, defaultItems) {
+  const snapshot = await getDocs(checklistRef(groupId, type));
 
   const existingIds = new Set(
     snapshot.docs.map((doc) => doc.id)
@@ -92,7 +91,7 @@ export async function initialiseChecklist(type, defaultItems) {
     if (existingIds.has(id)) return;
 
     batch.set(
-      doc(db, "checklists", type, "items", id),
+      checklistDoc(groupId, type, id),
       {
         text,
         checked: false,

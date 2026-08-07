@@ -14,12 +14,21 @@ import Departure from "./pages/Departure";
 import Arrival from "./pages/Arrival";
 import LeavingCampsite from "./pages/LeavingCampsite";
 import ArrivalHome from "./pages/ArrivalHome";
+import Welcome from "./pages/Welcome";
+import CreateGroup from "./pages/CreateGroup";
+import JoinGroup from "./pages/JoinGroup";
+import { Navigate } from "react-router-dom";
+import { useGroup } from "./auth/GroupProvider";
 
+function StartupRoute() {
+  const { groupId } = useGroup();
+  return groupId ? <Home /> : <Navigate to="/welcome" replace />;
+}
 function App() {
   return (
     <Routes>
       <Route element={<Layout />}>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<StartupRoute />} />
 
         <Route path="/trips" element={<Trips />} />
         <Route path="/trips/new" element={<AddTrip />} />
@@ -38,6 +47,9 @@ function App() {
         <Route path="/shopping" element={<Shopping />} />
 
         <Route path="/settings" element={<Settings />} />
+        <Route path="/welcome" element={<Welcome />} />
+        <Route path="/create-group" element={<CreateGroup />} />
+        <Route path="/join-group" element={<JoinGroup />} />
       </Route>
     </Routes>
   );

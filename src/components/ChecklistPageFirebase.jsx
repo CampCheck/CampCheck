@@ -27,8 +27,10 @@ import {
   updateChecklistOrder,
   initialiseChecklist,
 } from "../firebase/checklists";
+import { useGroup } from "../auth/GroupProvider";
 
 function ChecklistPage({ title, storageKey, items, backLink }) {
+  const { groupId } = useGroup();
   const [showResetDialog, setShowResetDialog] = useState(false);
   const [savedItems, setSavedItems] = useState([]);
   const [showAddItem, setShowAddItem] = useState(false);
@@ -45,11 +47,13 @@ function ChecklistPage({ title, storageKey, items, backLink }) {
   );
 
   useEffect(() => {
-    initialiseChecklist(storageKey, items);
-  }, [storageKey, items]);
+    if (groupId) initialiseChecklist(groupId, storageKey, items).catch(console.error);
+  }, [groupId, storageKey, items]);
 
   useEffect(() => {
+    if (!groupId) return undefined;
     const unsubscribe = subscribeChecklist(
+      groupId,
       storageKey,
       (firebaseItems) => {
         setSavedItems(firebaseItems);
@@ -58,14 +62,14 @@ function ChecklistPage({ title, storageKey, items, backLink }) {
     );
 
     return unsubscribe;
-  }, [storageKey]);
+  }, [groupId, storageKey]);
 
   async function toggle(itemText) {
     const item = savedItems.find((i) => i.text === itemText);
 
     if (!item) return;
 
-    await updateChecklistItem(storageKey, item.id, {
+    await updateChecklistItem(groupId, storageKey, item.id, {
       checked: !item.checked,
     });
   }
@@ -77,7 +81,7 @@ function ChecklistPage({ title, storageKey, items, backLink }) {
 
     if (!item) return;
 
-    await updateChecklistItem(storageKey, item.id, {
+    await updateChecklistItem(groupId, storageKey, item.id, {
       text: newText.trim(),
     });
   }
@@ -87,7 +91,7 @@ function ChecklistPage({ title, storageKey, items, backLink }) {
 
     if (!item) return;
 
-    await deleteChecklistItem(storageKey, item.id);
+    await deleteChecklistItem(groupId, storageKey, item.id);
   }
 
  async function handleDragEnd(event) {
@@ -96,11 +100,11 @@ function ChecklistPage({ title, storageKey, items, backLink }) {
   if (!over || active.id === over.id) return;
 
   const oldIndex = savedItems.findIndex(
-    (i) => i.text === active.id
+    (i) => i.id === active.id
   );
 
   const newIndex = savedItems.findIndex(
-    (i) => i.text === over.id
+    (i) => i.id === over.id
   );
 
   const reordered = arrayMove(savedItems, oldIndex, newIndex);
@@ -109,12 +113,12 @@ function ChecklistPage({ title, storageKey, items, backLink }) {
   setSavedItems(reordered);
 
   // Save new order to Firestore in one batch
-  await updateChecklistOrder(storageKey, reordered);
+  await updateChecklistOrder(groupId, storageKey, reordered);
 }
 
 async function confirmResetChecklist() {
   for (const item of savedItems) {
-    await updateChecklistItem(storageKey, item.id, {
+    await updateChecklistItem(groupId, storageKey, item.id, {
       checked: false,
     });
   }
@@ -122,7 +126,7 @@ async function confirmResetChecklist() {
   setShowResetDialog(false);
 }
 
-const allItems = savedItems.map((item) => item.text);
+const allItems = savedItems.map((item) => item.id);
 
 const completed = savedItems.filter(
   (item) => item.checked
@@ -150,7 +154,7 @@ return (
           onClick={async () => {
             if (!newItem.trim()) return;
 
-            await addChecklistItem(storageKey, {
+            await addChecklistItem(groupId, storageKey, {
               text: newItem.trim(),
               checked: false,
               order: savedItems.length,

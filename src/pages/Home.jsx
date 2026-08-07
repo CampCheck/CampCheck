@@ -2,93 +2,117 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   FaCalendarAlt,
-  FaChevronRight,
   FaMapMarkerAlt,
-  
 } from "react-icons/fa";
-import { getWeather, weatherDescription, weatherIcon, dayName, weatherTheme } from "../utils/weather";
+
+import {
+  getWeather,
+  weatherDescription,
+  weatherIcon,
+  dayName,
+  weatherTheme,
+} from "../utils/weather";
+
 import logo from "../assets/campcheck-logo.png";
+
 import {
   departureChecklist,
   arrivalChecklist,
 } from "../data/checklists";
 
-import { getChecklistProgress } from "../utils/checklistProgress";
-import { TbCaravan } from "react-icons/tb";
 import { HiOutlineShoppingBag } from "react-icons/hi2";
-import { LuCalendarDays, LuClipboardCheck, LuShoppingBasket } from "react-icons/lu";
-import { FaCaravan } from "react-icons/fa6";
-import { FaCampground, FaHome } from "react-icons/fa";
+import {
+  LuCalendarDays,
+  LuClipboardCheck,
+} from "react-icons/lu";
 import JourneyBar from "../components/JourneyBar";
+
 import { subscribeTrips } from "../firebase/trips";
 import { subscribeShopping } from "../firebase/shopping";
+import { initialiseChecklist, subscribeChecklist } from "../firebase/checklists";
+import { useGroup } from "../auth/GroupProvider";
 
 function Home() {
   const navigate = useNavigate();
-    const departureProgress = getChecklistProgress(
-    "departureChecklist",
-    departureChecklist
-  );
-
-  const arrivalProgress = getChecklistProgress(
-    "arrivalChecklist",
-    arrivalChecklist
-  );
-
-  const caravanCompleted =
-    departureProgress.completed + arrivalProgress.completed;
-
-  const caravanTotal =
-    departureProgress.total + arrivalProgress.total;
-
-  const caravanPercent =
-    caravanTotal > 0
-      ? Math.round((caravanCompleted / caravanTotal) * 100)
-      : 0;
+  const { groupId } = useGroup();
 
   const [trip, setTrip] = useState(null);
   const [weather, setWeather] = useState(null);
   const [loadingWeather, setLoadingWeather] = useState(false);
   const [weatherError, setWeatherError] = useState(false);
   const [showForecast, setShowForecast] = useState(false);
-const [shoppingProgress, setShoppingProgress] = useState({
-  total: 0,
-  completed: 0,
-});
- useEffect(() => {
-  const unsubscribe = subscribeShopping(
-    (shoppingItems) => {
-      const shoppingCompleted =
-        shoppingItems.filter((item) => item.checked).length;
 
-      setShoppingProgress({
-        total: shoppingItems.length,
-        completed: shoppingCompleted,
-      });
-    },
-    (error) => console.error(error)
-  );
-
-  return unsubscribe;
-}, []);
+  const [shoppingProgress, setShoppingProgress] = useState({
+    total: 0,
+    completed: 0,
+  });
+  const [checklistProgress, setChecklistProgress] = useState({
+    departure: { completed: 0, total: departureChecklist.length },
+    arrival: { completed: 0, total: arrivalChecklist.length },
+  });
 
   useEffect(() => {
+    if (!groupId) return undefined;
+    const unsubscribe = subscribeShopping(
+      groupId,
+      (shoppingItems) => {
+        const shoppingCompleted =
+          shoppingItems.filter((item) => item.checked).length;
+
+        setShoppingProgress({
+          total: shoppingItems.length,
+          completed: shoppingCompleted,
+        });
+      },
+      console.error
+    );
+
+    return unsubscribe;
+  }, [groupId]);
+
+  useEffect(() => {
+    if (!groupId) return undefined;
+
+    const types = [
+      ["departure", "departureChecklist", departureChecklist],
+      ["arrival", "arrivalChecklist", arrivalChecklist],
+    ];
+    const unsubscribers = types.map(([key, type, defaults]) => {
+      initialiseChecklist(groupId, type, defaults).catch(console.error);
+      return subscribeChecklist(groupId, type, (items) => {
+        setChecklistProgress((current) => ({
+          ...current,
+          [key]: { total: items.length, completed: items.filter((item) => item.checked).length },
+        }));
+      }, console.error);
+    });
+
+    return () => unsubscribers.forEach((unsubscribe) => unsubscribe());
+  }, [groupId]);
+
+  useEffect(() => {
+    if (!groupId) return;
+
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    return subscribeTrips((trips) => {
-      const upcomingTrips = trips.filter(
-        (trip) => new Date(trip.departure) >= today
-      );
+    return subscribeTrips(
+      groupId,
+      (trips) => {
+        const upcomingTrips = trips.filter(
+          (trip) => new Date(trip.departure) >= today
+        );
 
-      if (upcomingTrips.length === 0) {
-        setTrip(null);
-        return;
-      }
+        if (upcomingTrips.length === 0) {
+          setTrip(null);
+          return;
+        }
 
-      setTrip(upcomingTrips[0]);
-    });
-  }, []);
+        setTrip(upcomingTrips[0]);
+      },
+      console.error
+    );
+  }, [groupId]);
 
   useEffect(() => {
     if (!trip?.town) {
@@ -138,9 +162,10 @@ const [shoppingProgress, setShoppingProgress] = useState({
     const tripDate = new Date(date);
     tripDate.setHours(0, 0, 0, 0);
 
-    return Math.ceil((tripDate - today) / (1000 * 60 * 60 * 24));
+    return Math.ceil(
+      (tripDate - today) / (1000 * 60 * 60 * 24)
+    );
   }
-
   function formatDate(date) {
     return new Date(date).toLocaleDateString("en-GB", {
       day: "numeric",
@@ -157,6 +182,9 @@ const shoppingPercent =
         (shoppingProgress.completed / shoppingProgress.total) * 100
       )
     : 0;
+const caravanCompleted = checklistProgress.departure.completed + checklistProgress.arrival.completed;
+const caravanTotal = checklistProgress.departure.total + checklistProgress.arrival.total;
+const caravanPercent = caravanTotal ? Math.round((caravanCompleted / caravanTotal) * 100) : 0;
     let caravanPosition = 0;
 
 if (trip?.arrival) {

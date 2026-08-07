@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { db } from "../firebase/firebase";
-import { doc, getDoc } from "firebase/firestore";
-import { updateVehicle } from "../firebase/garage";
-
+import { useGroup } from "../auth/GroupProvider";
+import { getVehicle, updateVehicle } from "../firebase/garage";
 function VehicleDetails() {
   const { id } = useParams();
+const { groupId } = useGroup();
 
-  const [loading, setLoading] = useState(true);
+const [loading, setLoading] = useState(true);
 
   const [vehicle, setVehicle] = useState({
     type: "",
@@ -24,26 +23,27 @@ function VehicleDetails() {
   });
 
   useEffect(() => {
-    async function loadVehicle() {
-      const snap = await getDoc(doc(db, "garage", id));
+  async function loadVehicle() {
+    if (!groupId) return;
 
-      if (snap.exists()) {
-        setVehicle((prev) => ({
-          ...prev,
-          ...snap.data(),
-        }));
-      }
-
-      setLoading(false);
+    const savedVehicle = await getVehicle(groupId, id);
+    if (savedVehicle) {
+      setVehicle((prev) => ({
+        ...prev,
+        ...savedVehicle,
+      }));
     }
 
-    loadVehicle();
-  }, [id]);
+    setLoading(false);
+  }
+
+  loadVehicle();
+}, [id, groupId]);
 
   async function saveVehicle() {
-    await updateVehicle(id, vehicle);
-    alert("Vehicle saved.");
-  }
+  await updateVehicle(groupId, id, vehicle);
+  alert("Vehicle saved.");
+}
 
   function update(field, value) {
     setVehicle((prev) => ({

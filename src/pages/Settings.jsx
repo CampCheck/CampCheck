@@ -1,6 +1,8 @@
 import { FaChevronRight } from "react-icons/fa";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Sheet } from "react-modal-sheet";
+import { useGroup } from "../auth/GroupProvider";
+import { subscribeCampingGroup, subscribeGroupMembers } from "../services/groupService";
 
 function SettingRow({ title, subtitle, danger = false, onClick }) {
   return (
@@ -44,6 +46,19 @@ function SettingRow({ title, subtitle, danger = false, onClick }) {
 
 function Settings() {
   const [showUnits, setShowUnits] = useState(false);
+  const { groupId } = useGroup();
+  const [group, setGroup] = useState(null);
+  const [members, setMembers] = useState([]);
+
+  useEffect(() => {
+    if (!groupId) return undefined;
+    const unsubscribeGroup = subscribeCampingGroup(groupId, setGroup, console.error);
+    const unsubscribeMembers = subscribeGroupMembers(groupId, setMembers, console.error);
+    return () => {
+      unsubscribeGroup();
+      unsubscribeMembers();
+    };
+  }, [groupId]);
 
   return (
     <div className="shopping-page">
@@ -56,6 +71,25 @@ function Settings() {
         title="Account"
         subtitle="Anonymous account"
       />
+
+      <div style={{ marginTop: "32px", marginBottom: "12px" }}>
+        <h2>Camping Group</h2>
+      </div>
+
+      <div className="dashboard-card" style={{ marginBottom: "12px" }}>
+        <h3>{group?.name || "Camping Group"}</h3>
+        <p style={{ marginTop: "4px", color: "#666" }}>Invite code: {group?.inviteCode || "Loading..."}</p>
+        <p style={{ marginTop: "12px", color: "#666" }}>Members</p>
+        {members.map((member) => (
+          <p key={member.uid} style={{ marginTop: "4px" }}>
+            {member.uid.slice(0, 8)}… — {member.uid === group?.owner || member.uid === group?.createdBy ? "Owner" : member.role === "admin" ? "Admin" : "Member"}
+          </p>
+        ))}
+      </div>
+
+      <SettingRow title="Invite Member" subtitle="Coming soon" />
+      <SettingRow title="Leave Group" subtitle="Coming soon" />
+      <SettingRow title="Transfer Ownership" subtitle="Coming soon" />
 
       <SettingRow
         title="Appearance"
@@ -195,4 +229,4 @@ function Settings() {
   );
 }
 
-export default Settings;  
+export default Settings;
