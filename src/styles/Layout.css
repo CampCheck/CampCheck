@@ -28,6 +28,19 @@
     transform:scale(1.02);
 }
 
+.startup-screen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+
+.startup-logo {
+    width: 170px;
+    height: auto;
+}
+
 /* ========================================
    BOTTOM NAVIGATION
 ======================================== */

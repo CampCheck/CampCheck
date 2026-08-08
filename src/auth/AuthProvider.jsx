@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { signIn, auth, onAuthStateChanged } from "./auth";
+import StartupScreen from "../components/StartupScreen";
 
 const AuthContext = createContext(null);
 
@@ -19,7 +20,7 @@ export function AuthProvider({ children }) {
   }, []);
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <StartupScreen />;
   }
 
   return (

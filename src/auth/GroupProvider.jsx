@@ -4,6 +4,7 @@ import { db } from "../firebase/firebase";
 import { useAuth } from "./AuthProvider";
 import { startPresence } from "../services/presenceService";
 import { DEFAULT_CAMPING_STYLE } from "../campingStyles";
+import StartupScreen from "../components/StartupScreen";
 
 const GroupContext = createContext(null);
 
@@ -48,7 +49,7 @@ export function GroupProvider({ children }) {
   }, [groupId, user]);
 
   if (loading) {
-    return <div className="container">Loading...</div>;
+    return <StartupScreen />;
   }
 
   return (
