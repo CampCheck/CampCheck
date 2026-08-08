@@ -1,7 +1,10 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../auth/AuthProvider";
-import { createCampingGroup } from "../services/groupService";
+import {
+  createCampingGroup,
+  updateMemberName,
+} from "../services/groupService";
 import { campingStyles } from "../campingStyles";
 
 function CreateGroup() {
@@ -9,7 +12,10 @@ function CreateGroup() {
   const [campingStyle, setCampingStyle] = useState("");
 
   const navigate = useNavigate();
+  const location = useLocation();
   const { user } = useAuth();
+
+  const displayName = location.state?.displayName || "";
 
   async function handleCreateGroup() {
     if (!groupName || !campingStyle) {
@@ -17,11 +23,22 @@ function CreateGroup() {
       return;
     }
 
+    if (!displayName) {
+      alert("Please go back and enter your name.");
+      return;
+    }
+
     try {
-      await createCampingGroup(
+      const groupId = await createCampingGroup(
         user,
         groupName,
         campingStyle
+      );
+
+      await updateMemberName(
+        groupId,
+        user.uid,
+        displayName
       );
 
       navigate("/");
@@ -32,7 +49,7 @@ function CreateGroup() {
   }
 
   return (
-    <div className="container">
+    <div className="shopping-page">
       <div className="shopping-title">
         <h1>Create Camping Group</h1>
         <p>Let's get your camping group set up.</p>
@@ -60,8 +77,14 @@ function CreateGroup() {
         {Object.values(campingStyles).map((style) => (
           <button
             key={style.id}
-            className={`add-checklist-btn ${campingStyle === style.id ? "selected" : ""}`}
-            onClick={() => setCampingStyle(style.id)}
+            className={`add-checklist-btn ${
+              campingStyle === style.id
+                ? "selected"
+                : ""
+            }`}
+            onClick={() =>
+              setCampingStyle(style.id)
+            }
           >
             {style.icons.departure} {style.label}
           </button>

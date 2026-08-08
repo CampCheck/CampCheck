@@ -1,7 +1,38 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../auth/AuthProvider";
 
 function Welcome() {
   const navigate = useNavigate();
+  const { user } = useAuth();
+
+  const [displayName, setDisplayName] = useState("");
+
+  function continueToCreate() {
+    const name = displayName.trim();
+
+    if (!name) {
+      alert("Please enter your name.");
+      return;
+    }
+
+    navigate("/create-group", {
+      state: { displayName: name },
+    });
+  }
+
+  function continueToJoin() {
+    const name = displayName.trim();
+
+    if (!name) {
+      alert("Please enter your name.");
+      return;
+    }
+
+    navigate("/join-group", {
+      state: { displayName: name },
+    });
+  }
 
   return (
     <div className="shopping-page">
@@ -10,9 +41,24 @@ function Welcome() {
         <p>Let's get your camping group set up.</p>
       </div>
 
+      <div className="dashboard-card">
+        <h3>What's your name?</h3>
+
+        <input
+          className="edit-input"
+          type="text"
+          placeholder="Enter your name"
+          value={displayName}
+          onChange={(event) =>
+            setDisplayName(event.target.value)
+          }
+          maxLength={40}
+        />
+      </div>
+
       <button
         className="save-trip-btn"
-        onClick={() => navigate("/create-group")}
+        onClick={continueToCreate}
       >
         Create Camping Group
       </button>
@@ -20,7 +66,7 @@ function Welcome() {
       <button
         className="add-checklist-btn"
         style={{ marginTop: "16px" }}
-        onClick={() => navigate("/join-group")}
+        onClick={continueToJoin}
       >
         Join Camping Group
       </button>

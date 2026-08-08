@@ -123,3 +123,11 @@ export async function regenerateInviteCode(groupId) {
 export async function removeGroupMember(groupId, memberId) {
   await deleteDoc(doc(db, "campingGroups", groupId, "members", memberId));
 }
+export async function updateMemberName(groupId, userId, displayName) {
+  await updateDoc(
+    doc(db, "campingGroups", groupId, "members", userId),
+    {
+      displayName: displayName.trim(),
+    }
+  );
+}

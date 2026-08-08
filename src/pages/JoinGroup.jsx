@@ -1,13 +1,20 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../auth/AuthProvider";
-import { joinCampingGroup } from "../services/groupService";
+import {
+  joinCampingGroup,
+  updateMemberName,
+} from "../services/groupService";
 
 function JoinGroup() {
   const [inviteCode, setInviteCode] = useState("");
   const [joining, setJoining] = useState(false);
+
   const navigate = useNavigate();
+  const location = useLocation();
   const { user } = useAuth();
+
+  const displayName = location.state?.displayName || "";
 
   async function handleJoinGroup() {
     if (!inviteCode.trim()) {
@@ -15,20 +22,41 @@ function JoinGroup() {
       return;
     }
 
+    if (!displayName) {
+      alert("Please go back and enter your name.");
+      return;
+    }
+
     setJoining(true);
+
     try {
-      await joinCampingGroup(user, inviteCode);
+      const groupId = await joinCampingGroup(
+        user,
+        inviteCode
+      );
+
+      await updateMemberName(
+        groupId,
+        user.uid,
+        displayName
+      );
+
       navigate("/");
     } catch (error) {
       console.error(error);
-      alert(error.message === "INVALID_INVITE_CODE" ? "That invite code was not found." : "Unable to join this camping group.");
+
+      alert(
+        error.message === "INVALID_INVITE_CODE"
+          ? "That invite code was not found."
+          : "Unable to join this camping group."
+      );
     } finally {
       setJoining(false);
     }
   }
 
   return (
-    <div className="container">
+    <div className="shopping-page">
       <div className="shopping-title">
         <h1>Join Camping Group</h1>
         <p>Enter your invite code.</p>
@@ -42,7 +70,11 @@ function JoinGroup() {
         <input
           className="edit-input"
           value={inviteCode}
-          onChange={(e) => setInviteCode(e.target.value.toUpperCase())}
+          onChange={(e) =>
+            setInviteCode(
+              e.target.value.toUpperCase()
+            )
+          }
           placeholder="AB12CD"
         />
 

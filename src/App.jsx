@@ -10,6 +10,8 @@ import VehicleDetails from "./pages/VehicleDetails";
 import Checklists from "./pages/Checklists";
 import Shopping from "./pages/Shopping";
 import Settings from "./pages/Settings";
+import Account from "./pages/Account";
+import CampingGroup from "./pages/CampingGroup";
 import Departure from "./pages/Departure";
 import Arrival from "./pages/Arrival";
 import LeavingCampsite from "./pages/LeavingCampsite";
@@ -49,6 +51,23 @@ function App() {
         <Route path="/shopping" element={<Shopping />} />
 
         <Route path="/settings" element={<Settings />} />
+        <Route path="/shopping" element={<Shopping />} />
+
+<Route path="/settings" element={<Settings />} />
+
+<Route
+  path="/settings/account"
+  element={<Account />}
+/>
+
+<Route
+  path="/settings/camping-group"
+  element={<CampingGroup />}
+/>
+
+<Route path="/welcome" element={<Welcome />} />
+<Route path="/create-group" element={<CreateGroup />} />
+<Route path="/join-group" element={<JoinGroup />} />
         <Route path="/welcome" element={<Welcome />} />
         <Route path="/create-group" element={<CreateGroup />} />
         <Route path="/join-group" element={<JoinGroup />} />

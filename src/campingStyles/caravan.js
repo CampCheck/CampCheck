@@ -1,18 +1,42 @@
-const caravan = {
-  id: "Caravan",
-  label: "Caravan",
-  icons: { departure: "🚐", arrival: "🏕️", leaving: "↗", arrivalHome: "🏠" },
-  dashboard: { garageLabel: "Garage", checklistLabel: "Checklists" },
-  garageTypes: [
-    { type: "Tow Car", icon: "🚗", defaultModel: "New Tow Car", fields: ["registration", "manufacturer", "model", "year", "mileage", "serviceDate", "mot", "insurance", "tyres", "notes"] },
-    { type: "Caravan", icon: "🚐", defaultModel: "New Caravan", fields: ["manufacturer", "model", "year", "crisNumber", "battery", "waterPump", "tyres", "serviceDate", "notes"] },
-  ],
-  checklists: {
-    departure: { id: "departureChecklist", title: "Departure Checklist", items: ["Hitch locked", "Breakaway cable attached", "Jockey wheel raised", "Corner steadies raised", "TV aerial down", "Windows locked", "Roof lights closed", "Fridge switched to 12V", "Water disconnected", "Gas bottles turned off"] },
-    arrival: { id: "arrivalChecklist", title: "Arrival Checklist", items: ["Level caravan", "Apply handbrake", "Lower corner steadies", "Connect electric hook-up", "Connect water", "Turn gas on", "Open roof vents"] },
-    leaving: { id: "leavingChecklist", title: "Leaving Campsite", items: ["Disconnect electric hook-up", "Disconnect water", "Drain waste water", "Empty toilet cassette", "Turn gas off", "Close roof vents", "Lock windows", "Lower TV aerial", "Raise corner steadies", "Remove wheel chocks", "Secure loose items", "Check pitch for forgotten items", "Attach breakaway cable", "Final walk-around"] },
-    arrivalHome: { id: "arrivalHomeChecklist", title: "Arrival Home", items: ["Empty caravan", "Empty fridge", "Leave fridge door open", "Drain fresh water system", "Drain water heater", "Empty waste water", "Empty toilet cassette", "Clean toilet", "Turn off battery isolator", "Remove valuables", "Vacuum caravan", "Check for damage", "Lock caravan", "Book next trip"] },
-  },
-};
+  const caravan = {
+    id: "Caravan",
+    label: "Caravan",
+    icons: { departure: "🚐", arrival: "🏕️", leaving: "↗", arrivalHome: "🏠" },
+    dashboard: { garageLabel: "Garage", checklistLabel: "Checklists" },
+    garageTypes: [
+      { type: "Tow Car", icon: "🚗", defaultModel: "New Tow Car", fields: ["registration", "manufacturer", "model", "year", "serviceDate", "mot", "insurance", "tyres", "notes"] },
+      { 
+  type: "Caravan",
+  icon: "🚐",
+  defaultModel: "New Caravan",
+  fields: [
+    "manufacturer",
+    "model",
+    "year",
+    "crisNumber",
+    "battery",
+    "waterPump",
+    "miro",
+    "mtplm",
+    "payload",
+    "noseWeight",
+    "shippingLength",
+    "bodyLength",
+    "width",
+    "height",
+    "awningSize",
+    "tyres",
+    "serviceDate",
+    "notes"
+  ]
+},
+    ],
+    checklists: {
+      departure: { id: "departureChecklist", title: "Departure Checklist", items: ["Lock Windows", "Roof Vents Closed", "Lower Aerial", "Fridge Switched To 12V", "Gas Turned Off", "Caravan Packed Correctly", "Door Locked", "Towing Cover On", "Corner Steadies Raised", "Hitch locked", "Break Away Cable Attached", "Electrics Attached To Vehicle", "Motor Mover Disengaged", "Jockey Wheel Raised", "Handbrake Off", "Wheel Torque Checked", "Towing Mirrors On", "Route Planned", "Check Lights", "Final Walk Round", "Have a safe journey"] },
+      arrival: { id: "arrivalChecklist", title: "Arrival Checklist", items: ["Apply Handbrake", "Level Caravan", "Lower Corner Steadies", "Connect Electric Hook-Up", "Close Water Drain Tap", "Connect Water", "Turn Gas On", "Switch Fridge To ELectric/Gas", "Adjust Aerial", "Put Up Awning","Have A Drink & Relax"] },
+      leaving: { id: "leavingChecklist", title: "Leaving Campsite", items: ["Empty Toilet Flush", "Disconnect water", "Open Drain Tap", "Disconnect Electric", "Turn gas off", "Close roof vents", "Lock windows", "Lower aerial", "Fridge Switched To 12v", "Caravan Packed Correctly", "Door Locked", "Towing Cover On", "Raise corner steadies", "Hitch Locked", "Break Away Cable Attached", "Electrics Attached to Vehicle", "Motor Mover Disengaged", "Jockey Wheel Raised", "Handbrake Off", "Towing Mirrors On", "Check pitch for forgotten items", "Route Planned", "Check Lights", "Final walk-around", "Have A Safe Journey"] },
+      arrivalHome: { id: "arrivalHomeChecklist", title: "Arrival Home", items: ["Empty caravan", "Empty fridge", "Leave fridge door open", "Clean Caravan", "Check For Any Damage", "Lock caravan", "Book next trip"] },
+    },
+  };
 
-export default caravan;
+  export default caravan;

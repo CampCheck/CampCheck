@@ -80,9 +80,18 @@ function Garage() {
             <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
               <span style={{ fontSize: "24px" }}>{type?.icon || "🚗"}</span>
               <div style={{ flex: 1 }}>
-                <h3>{vehicle.model || "Unnamed Vehicle"}</h3>
-                <p>{vehicle.type}</p>
-              </div>
+  <h3>{vehicle.manufacturer || "Unknown Manufacturer"}</h3>
+
+  <p style={{ margin: "2px 0" }}>
+    {vehicle.model || "Unnamed Vehicle"}
+  </p>
+
+  {vehicle.registration && (
+    <p style={{ margin: "2px 0", fontSize: "14px" }}>
+      {vehicle.registration}
+    </p>
+  )}
+</div>
               <button className="delete-btn" onClick={(event) => removeVehicle(event, vehicle)} aria-label={`Delete ${vehicle.model || vehicle.type}`}>
                 <FaTrash />
               </button>
