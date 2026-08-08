@@ -172,6 +172,16 @@ const shoppingPercent =
         (shoppingProgress.completed / shoppingProgress.total) * 100
       )
     : 0;
+const checklistTotals = Object.values(checklistProgress).reduce(
+  (totals, progress) => ({
+    completed: totals.completed + progress.completed,
+    total: totals.total + progress.total,
+  }),
+  { completed: 0, total: 0 }
+);
+const checklistPercent = checklistTotals.total
+  ? Math.round((checklistTotals.completed / checklistTotals.total) * 100)
+  : 0;
     let journeyPosition = 0;
 
 if (trip?.arrival) {
@@ -381,21 +391,19 @@ if (trip?.arrival) {
         </div>
       )}
 
-      {Object.entries(style.checklists).map(([key, checklist]) => {
-        const progress = checklistProgress[key] || { completed: 0, total: checklist.items.length };
-        const percent = progress.total ? Math.round((progress.completed / progress.total) * 100) : 0;
-        return (
-          <div key={key} className="card trip caravan-card" onClick={() => navigate("/checklists")}>
-            <div className="caravan-card-top">
-              <h3>{checklist.title}</h3>
-              <div className="caravan-card-icon"><LuClipboardCheck /></div>
-            </div>
-            <div className="caravan-progress-text">{progress.completed} of {progress.total} completed</div>
-            <div className="caravan-progress-bar"><div className="caravan-progress-fill" style={{ width: `${percent}%` }} /></div>
-            <div className="caravan-progress-percent">{percent}% complete</div>
-          </div>
-        );
-      })}
+      <div className="card trip caravan-card" onClick={() => navigate("/checklists")}>
+        <div className="caravan-card-top">
+          <h3>Checklists</h3>
+          <div className="caravan-card-icon"><LuClipboardCheck /></div>
+        </div>
+        <div className="caravan-progress-text">
+          {checklistTotals.completed} of {checklistTotals.total} completed
+        </div>
+        <div className="caravan-progress-bar">
+          <div className="caravan-progress-fill" style={{ width: `${checklistPercent}%` }} />
+        </div>
+        <div className="caravan-progress-percent">{checklistPercent}% complete</div>
+      </div>
 
       <div
   className="card shopping-card"

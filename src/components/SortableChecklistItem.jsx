@@ -11,7 +11,7 @@ export default function SortableChecklistItem(props) {
     transform,
     transition,
   } = useSortable({
-    id: props.text,
+    id: props.id,
   });
 
   const style = {
@@ -38,6 +38,7 @@ export default function SortableChecklistItem(props) {
             cursor: "grab",
             display: "flex",
             alignItems: "center",
+            touchAction: "none",
           }}
         >
           <FaGripLines
