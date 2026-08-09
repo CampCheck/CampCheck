@@ -1,0 +1,187 @@
+/* ========================================
+   RATE CAMPCHECK
+======================================== */
+
+.rate-page {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 0 20px 120px;
+}
+
+.rate-header {
+  background: linear-gradient(145deg, #0ba7a0 0%, #007c79 100%);
+  color: white;
+  padding: 22px;
+  border-radius: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 8px 20px rgba(0, 110, 110, 0.28);
+}
+
+.rate-header h1 {
+  margin: 0;
+  color: white;
+  font-size: 2rem;
+}
+
+.rate-header p {
+  margin: 6px 0 0;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.rate-card {
+  background: var(--card-bg, #fff);
+  border-radius: 20px;
+  padding: 28px 22px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  text-align: center;
+}
+
+.rate-card h2 {
+  margin: 0;
+  color: var(--cc-text, #102a43);
+  font-size: 1.35rem;
+}
+
+.star-rating {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 28px 0 12px;
+}
+
+.star-btn {
+  border: none;
+  background: transparent;
+  padding: 4px;
+  cursor: pointer;
+  font-size: 38px;
+  color: #cbd5d1;
+  transition: transform 0.15s ease, color 0.15s ease;
+}
+
+.star-btn:hover {
+  transform: scale(1.12);
+}
+
+.star-btn.selected {
+  color: #f5b301;
+}
+
+.rating-label {
+  min-height: 24px;
+  margin: 0 0 28px;
+  color: var(--cc-text-secondary, #66736e);
+  font-weight: 600;
+}
+
+.rate-feedback-label {
+  display: block;
+  text-align: left;
+  margin-bottom: 8px;
+  color: var(--cc-text, #102a43);
+  font-weight: 600;
+}
+
+.rate-feedback-label span {
+  font-weight: 400;
+  opacity: 0.7;
+}
+
+.rate-feedback {
+  width: 100%;
+  min-height: 130px;
+  box-sizing: border-box;
+  padding: 14px;
+  border: 1px solid var(--border, #d1d5db);
+  border-radius: 12px;
+  background: var(--input-bg, #fff);
+  color: var(--cc-text, #102a43);
+  font-family: inherit;
+  font-size: 1rem;
+  resize: vertical;
+}
+
+.rate-feedback:focus {
+  outline: none;
+  border-color: #0ba7a0;
+}
+
+.rate-feedback::placeholder {
+  color: #94a3b8;
+}
+
+.rate-submit-btn {
+  width: 100%;
+  margin-top: 20px;
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  background: #16a34a;
+  color: white;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.rate-submit-btn:hover:not(:disabled) {
+  background: #15803d;
+}
+
+.rate-submit-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.rate-back-btn {
+  width: 100%;
+  margin-top: 10px;
+  padding: 12px;
+  border: none;
+  background: transparent;
+  color: var(--cc-text-secondary, #66736e);
+  font-size: 15px;
+  cursor: pointer;
+}
+
+/* ========================================
+   SUCCESS
+======================================== */
+
+.rate-success {
+  margin-top: 20px;
+}
+
+.rate-success-icon {
+  font-size: 55px;
+  margin-bottom: 10px;
+}
+
+.rate-success h1 {
+  color: var(--cc-text, #102a43);
+}
+
+.rate-success p {
+  color: var(--cc-text-secondary, #66736e);
+  margin: 10px 0 25px;
+}
+
+/* ========================================
+   DARK MODE
+======================================== */
+
+html.theme-dark .rate-card {
+  background: #1c2523;
+}
+
+html.theme-dark .rate-card h1,
+html.theme-dark .rate-card h2,
+html.theme-dark .rate-feedback-label,
+html.theme-dark .rate-success h1 {
+  color: #f1f5f3;
+}
+
+html.theme-dark .rate-feedback {
+  background: #26312f;
+  border-color: #46524f;
+  color: #f1f5f3;
+}

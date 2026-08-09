@@ -1,0 +1,97 @@
+/* ========================================
+   PRIVACY POLICY
+======================================== */
+
+.privacy-page {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 0 20px 120px;
+}
+
+.privacy-header {
+  background: linear-gradient(145deg, #0ba7a0 0%, #007c79 100%);
+  color: white;
+  padding: 22px;
+  border-radius: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 8px 20px rgba(0, 110, 110, 0.28);
+}
+
+.privacy-header h1 {
+  margin: 0;
+  color: white !important;
+  font-size: 2rem;
+}
+
+.privacy-header p {
+  margin: 6px 0 0;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.privacy-card {
+  background: var(--card-bg, #fff);
+  border-radius: 20px;
+  padding: 24px 22px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+
+.privacy-updated {
+  color: var(--cc-text-secondary, #66736e);
+  font-size: 0.9rem;
+  margin-top: 0;
+}
+
+.privacy-card section {
+  margin-top: 28px;
+}
+
+.privacy-card h2 {
+  color: var(--cc-text, #102a43) !important;
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+.privacy-card p,
+.privacy-card li {
+  color: var(--cc-text, #102a43);
+  line-height: 1.6;
+}
+
+.privacy-card ul {
+  padding-left: 22px;
+}
+
+.privacy-back-btn {
+  width: 100%;
+  margin-top: 30px;
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  background: #16a34a;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.privacy-back-btn:hover {
+  background: #15803d;
+}
+
+/* ========================================
+   DARK MODE
+======================================== */
+
+html.theme-dark .privacy-card {
+  background: #1c2523;
+}
+
+html.theme-dark .privacy-card h2,
+html.theme-dark .privacy-card p,
+html.theme-dark .privacy-card li {
+  color: #f1f5f3 !important;
+}
+
+html.theme-dark .privacy-updated {
+  color: #b8c4c0 !important;
+}

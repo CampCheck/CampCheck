@@ -13,6 +13,8 @@ import "./styles/cards.css";
 import "./styles/checklist.css";
 import "./styles/dashboard.css";
 import "./styles/dialog.css";
+import "./styles/rate.css";
+import "./styles/privacy.css";
 
 import "./styles/Trips.css";
 import "./styles/Caravan.css";

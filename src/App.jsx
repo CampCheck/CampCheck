@@ -21,6 +21,8 @@ import CreateGroup from "./pages/CreateGroup";
 import JoinGroup from "./pages/JoinGroup";
 import { Navigate } from "react-router-dom";
 import { useGroup } from "./auth/GroupProvider";
+import RateCampCheck from "./pages/RateCampCheck";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 
 function StartupRoute() {
   const { groupId } = useGroup();
@@ -51,9 +53,12 @@ function App() {
         <Route path="/shopping" element={<Shopping />} />
 
         <Route path="/settings" element={<Settings />} />
-        <Route path="/shopping" element={<Shopping />} />
+        <Route path="/settings/privacy" element={<PrivacyPolicy />} />
+<Route path="/settings/rate" element={<RateCampCheck />} />
 
-<Route path="/settings" element={<Settings />} />
+<Route path="/shopping" element={<Shopping />} />
+
+
 
 <Route
   path="/settings/account"

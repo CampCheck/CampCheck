@@ -133,11 +133,19 @@ function Settings() {
         subtitle="Cloud sync"
       />
 
-      <SettingRow title="Rate CampCheck" />
+      <SettingRow
+  title="Rate CampCheck"
+  subtitle="Tell us what you think"
+  onClick={() => navigate("/settings/rate")}
+/>
 
       <SettingRow title="Report a Bug" />
 
-      <SettingRow title="Privacy Policy" />
+      <SettingRow
+  title="Privacy Policy"
+  subtitle="How CampCheck handles your information"
+  onClick={() => navigate("/settings/privacy")}
+/>
 
       {/* RESET AT THE VERY BOTTOM */}
       <details
