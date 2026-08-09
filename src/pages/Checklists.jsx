@@ -26,7 +26,7 @@ function Checklists() {
           <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
             <div style={{ fontSize: "28px", color: "#39a64b" }}>{style.icons?.[key] || "✓"}</div>
             <div style={{ flex: 1 }}><h3>{checklist.title}</h3></div>
-            <FaArrowRight color="#999" />
+            
           </div>
         </div>
       ))}

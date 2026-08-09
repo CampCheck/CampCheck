@@ -30,8 +30,24 @@ function ChecklistItem({
   }
 
   return (
-    <div className="checklist-item">
-      <label className="checklist-label">
+    <div
+      className="checklist-item"
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        width: "100%",
+      }}
+    >
+      <label
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "10px",
+          flex: 1,
+          cursor: "pointer",
+        }}
+      >
         <input
           type="checkbox"
           checked={checked}
@@ -66,28 +82,25 @@ function ChecklistItem({
           </>
         ) : (
           <>
-            <button
-  className="edit-btn"
-  onClick={() => {
-    if (!isCustom) {
-      alert("Default checklist items can't be edited.");
-      return;
-    }
-
-    setEditing(true);
-  }}
->
-  <FaRegPenToSquare />
-</button>
-
             {isCustom && (
-  <button
-    className="delete-btn"
-    onClick={onDelete}
-  >
-    <FaRegTrashCan />
-  </button>
-)}
+              <>
+                <button
+                  className="edit-btn"
+                  onClick={() => setEditing(true)}
+                  aria-label={`Edit ${text}`}
+                >
+                  <FaRegPenToSquare />
+                </button>
+
+                <button
+                  className="delete-btn"
+                  onClick={onDelete}
+                  aria-label={`Delete ${text}`}
+                >
+                  <FaRegTrashCan />
+                </button>
+              </>
+            )}
           </>
         )}
       </div>
