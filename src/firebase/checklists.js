@@ -72,33 +72,59 @@ export async function updateChecklistOrder(groupId, type, items) {
 export async function initialiseChecklist(groupId, type, defaultItems) {
   const snapshot = await getDocs(checklistRef(groupId, type));
 
-  const existingIds = new Set(
-    snapshot.docs.map((doc) => doc.id)
-  );
+  const existingItems = snapshot.docs.map((docSnap) => ({
+    id: docSnap.id,
+    ...docSnap.data(),
+  }));
 
-  if (existingIds.size === defaultItems.length) {
-    return;
-  }
+  const defaultIds = new Set(
+    defaultItems.map((text) =>
+      text
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-|-$/g, "")
+    )
+  );
 
   const batch = writeBatch(db);
 
+  // Remove old default items that are no longer in the new checklist.
+  // Custom items are kept.
+  existingItems.forEach((item) => {
+    if (item.custom !== true && !defaultIds.has(item.id)) {
+      batch.delete(checklistDoc(groupId, type, item.id));
+    }
+  });
+
+  // Add new default items and update the order of existing ones.
   defaultItems.forEach((text, index) => {
     const id = text
       .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "_")
-      .replace(/^_|_$/g, "");
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-|-$/g, "");
 
-    if (existingIds.has(id)) return;
-
-    batch.set(
-      checklistDoc(groupId, type, id),
-      {
-        text,
-        checked: false,
-        order: index,
-        custom: false,
-      }
+    const existingItem = existingItems.find(
+      (item) => item.id === id
     );
+
+    if (existingItem) {
+      batch.update(
+        checklistDoc(groupId, type, id),
+        {
+          order: index,
+        }
+      );
+    } else {
+      batch.set(
+        checklistDoc(groupId, type, id),
+        {
+          text,
+          checked: false,
+          order: index,
+          custom: false,
+        }
+      );
+    }
   });
 
   await batch.commit();
