@@ -21,3 +21,143 @@ body{
 .container {
   padding-bottom: 120px;
 }
+/* =========================================================
+   CampCheck Themes
+   ========================================================= */
+
+:root {
+  --cc-bg: #eef6f1;
+  --cc-card: #ffffff;
+  --cc-text: #102a43;
+  --cc-text-secondary: #666666;
+  --cc-border: #d9e2dc;
+  --cc-input-bg: #ffffff;
+  --cc-input-text: #102a43;
+  --cc-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+/* Light Theme */
+
+html.theme-light,
+html.theme-light body {
+  background: var(--cc-bg);
+  color: var(--cc-text);
+}
+
+/* Dark Theme */
+
+html.theme-dark {
+  --cc-bg: #111817;
+  --cc-card: #1c2523;
+  --cc-text: #f1f5f3;
+  --cc-text-secondary: #b8c4c0;
+  --cc-border: #34413d;
+  --cc-input-bg: #26312e;
+  --cc-input-text: #f1f5f3;
+  --cc-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+}
+
+html.theme-dark body {
+  background: var(--cc-bg);
+  color: var(--cc-text);
+}
+
+/* Cards */
+
+html.theme-dark .dashboard-card,
+html.theme-dark .card,
+html.theme-dark .settings-card,
+html.theme-dark .checklist-card,
+html.theme-dark .shopping-card {
+  background: var(--cc-card);
+  color: var(--cc-text);
+  border-color: var(--cc-border);
+  box-shadow: var(--cc-shadow);
+}
+
+/* Secondary text */
+
+html.theme-dark p,
+html.theme-dark small,
+html.theme-dark .subtitle,
+html.theme-dark .form-label {
+  color: var(--cc-text-secondary);
+}
+
+/* Inputs */
+
+html.theme-dark input,
+html.theme-dark textarea,
+html.theme-dark select {
+  background: var(--cc-input-bg);
+  color: var(--cc-input-text);
+  border-color: var(--cc-border);
+}
+
+html.theme-dark input::placeholder,
+html.theme-dark textarea::placeholder {
+  color: #91a09b;
+}
+
+/* Links */
+
+html.theme-dark a {
+  color: inherit;
+}
+
+/* Settings */
+
+html.theme-dark .settings-row {
+  background: var(--cc-card);
+  color: var(--cc-text);
+  border-color: var(--cc-border);
+}
+
+/* Dialogs / sheets */
+
+html.theme-dark .modal,
+html.theme-dark .dialog,
+html.theme-dark .sheet {
+  background: var(--cc-card);
+  color: var(--cc-text);
+}
+/* Progress text */
+
+.progress-text {
+  color: var(--cc-text) !important;
+}
+
+html.theme-dark .progress-text {
+  color: var(--cc-text) !important;
+}
+/* ========================================
+   DARK MODE HEADINGS
+======================================== */
+
+html.theme-dark h1,
+html.theme-dark h2,
+html.theme-dark h3 {
+  color: var(--cc-text) !important;
+}
+/* ========================================
+   DARK MODE SETTINGS SHEETS
+======================================== */
+
+html.theme-dark .react-modal-sheet-container {
+  background: #1c2523 !important;
+  color: #f1f5f3;
+}
+
+html.theme-dark .react-modal-sheet-container h2,
+html.theme-dark .react-modal-sheet-container h3,
+html.theme-dark .react-modal-sheet-container label {
+  color: #f1f5f3 !important;
+}
+
+html.theme-dark .react-modal-sheet-container input {
+  color-scheme: dark;
+}
+
+html.theme-dark .react-modal-sheet-backdrop {
+  background: rgba(0, 0, 0, 0.55) !important;
+}

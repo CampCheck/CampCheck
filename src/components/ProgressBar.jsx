@@ -3,12 +3,10 @@ function ProgressBar({ completed, total }) {
 
   return (
     <div className="progress-wrapper">
-      <div className="progress-track">
-        <div
-          className="progress-fill"
-          style={{ width: `${percent}%` }}
-        />
-      </div>
+      <div
+        className="progress-fill"
+        style={{ width: `${percent}%` }}
+      />
 
       <p className="progress-text">
         {completed} / {total} Complete

@@ -6,6 +6,7 @@ import { registerSW } from "virtual:pwa-register";
 import App from "./App";
 import "./styles/global.css";
 import "./styles/Layout.css";
+import { ThemeProvider } from "./theme/ThemeProvider";
 
 import "./styles/buttons.css";
 import "./styles/cards.css";
@@ -26,9 +27,11 @@ registerSW({
 ReactDOM.createRoot(document.getElementById("root")).render(
   <AuthProvider>
   <GroupProvider>
-    <BrowserRouter basename={import.meta.env.BASE_URL}>
-      <App />
-    </BrowserRouter>
+    <ThemeProvider>
+      <BrowserRouter basename={import.meta.env.BASE_URL}>
+        <App />
+      </BrowserRouter>
+    </ThemeProvider>
   </GroupProvider>
 </AuthProvider>
 );

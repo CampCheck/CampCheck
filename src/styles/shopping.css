@@ -381,3 +381,33 @@
     margin-bottom: 15px;
     margin-left: 8px;
 }
+/* ========================================
+   DARK MODE SHOPPING LIST
+======================================== */
+
+html.theme-dark .shopping-item label {
+  color: var(--cc-text);
+}
+
+html.theme-dark .shopping-item label span {
+  color: var(--cc-text);
+}
+
+html.theme-dark .shopping-item.checked label span {
+  color: var(--cc-text-secondary);
+}
+/* ========================================
+   SHOPPING ITEM TEXT
+======================================== */
+
+.shopping-item-text {
+  color: #102a43;
+}
+
+html.theme-dark .shopping-item-text {
+  color: #102a43 !important;
+}
+
+html.theme-dark .shopping-item.checked .shopping-item-text {
+  color: #66736e !important;
+}

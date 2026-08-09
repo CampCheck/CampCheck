@@ -228,7 +228,9 @@ return (
     autoFocus
   />
 ) : (
-  <span>{item.text}</span>
+  <span className="shopping-item-text">
+    {item.text}
+  </span>
 )}
               </label>
 
