@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Outlet, NavLink, useLocation } from "react-router-dom";
 import {
   FaHome,
@@ -9,8 +10,22 @@ import logo from "../assets/campcheck-logo.png";
 
 function Layout() {
   const location = useLocation();
+  const [isOffline, setIsOffline] = useState(!navigator.onLine);
 
   const isHome = location.pathname === "/";
+
+  useEffect(() => {
+    const handleOnline = () => setIsOffline(false);
+    const handleOffline = () => setIsOffline(true);
+
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
+  }, []);
 
   return (
     <div className="app-layout">
@@ -22,6 +37,12 @@ function Layout() {
             className="app-logo"
           />
         </header>
+      )}
+
+      {isOffline && (
+        <div className="offline-banner">
+          🔴 Offline — changes will sync when you're back online
+        </div>
       )}
 
       <main className="app-content">
