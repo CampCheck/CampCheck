@@ -385,9 +385,12 @@ if (trip?.arrival) {
 
           <p>No trips planned.</p>
 
-          <button onClick={() => navigate("/trips/new")}>
-            Add Your First Trip
-          </button>
+          <button
+  className="add-first-trip-btn"
+  onClick={() => navigate("/trips/new")}
+>
+  Add Your First Trip
+</button>
         </div>
       )}
 

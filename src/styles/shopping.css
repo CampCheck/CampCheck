@@ -411,3 +411,30 @@ html.theme-dark .shopping-item-text {
 html.theme-dark .shopping-item.checked .shopping-item-text {
   color: #66736e !important;
 }
+/* ========================================
+   DARK MODE SHOPPING ITEMS
+======================================== */
+
+html.theme-dark .shopping-item {
+    background: #1c2523;
+    color: #f1f5f3;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+html.theme-dark .shopping-item label {
+    color: #f1f5f3 !important;
+}
+
+html.theme-dark .shopping-item label,
+html.theme-dark .shopping-item label span {
+    color: #f1f5f3 !important;
+}
+
+html.theme-dark .shopping-item.checked {
+    background: #24372d;
+}
+
+html.theme-dark .shopping-item.checked label,
+html.theme-dark .shopping-item.checked label span {
+    color: #aebbb6 !important;
+}

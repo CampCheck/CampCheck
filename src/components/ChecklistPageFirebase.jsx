@@ -151,31 +151,33 @@ return (
         />
 
         <button
-          onClick={async () => {
-            if (!newItem.trim()) return;
+  className="checklist-save-btn"
+  onClick={async () => {
+    if (!newItem.trim()) return;
 
-            await addChecklistItem(groupId, storageKey, {
-              text: newItem.trim(),
-              checked: false,
-              order: savedItems.length,
-              custom: true,
-            });
+    await addChecklistItem(groupId, storageKey, {
+      text: newItem.trim(),
+      checked: false,
+      order: savedItems.length,
+      custom: true,
+    });
 
-            setNewItem("");
-            setShowAddItem(false);
-          }}
-        >
-          Save
-        </button>
+    setNewItem("");
+    setShowAddItem(false);
+  }}
+>
+  Save
+</button>
 
-        <button
-          onClick={() => {
-            setNewItem("");
-            setShowAddItem(false);
-          }}
-        >
-          Cancel
-        </button>
+<button
+  className="checklist-cancel-btn"
+  onClick={() => {
+    setNewItem("");
+    setShowAddItem(false);
+  }}
+>
+  Cancel
+</button>
       </div>
       ) : (
         <button
@@ -223,12 +225,12 @@ return (
       </div>
 
       <ConfirmDialog
-        open={showResetDialog}
-        title="🚐 CampCheck"
-        message="Are you sure you want to reset this checklist? This will untick every item."
-        onConfirm={confirmResetChecklist}
-        onCancel={() => setShowResetDialog(false)}
-      />
+  open={showResetDialog}
+  
+  message="Are you sure you want to reset this checklist? This will untick every item."
+  onConfirm={confirmResetChecklist}
+  onCancel={() => setShowResetDialog(false)}
+/>
     </div>
   );
 }
