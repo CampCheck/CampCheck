@@ -8,3 +8,306 @@
   margin: 0 auto;
   width: 100%;
 }
+/* ========================================
+   TO DO & UPGRADES
+======================================== */
+
+.garage-tasks {
+  margin-top: 30px;
+}
+
+.garage-tasks-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 16px;
+}
+
+.garage-tasks-header h2 {
+  margin: 0;
+  color: var(--text);
+  font-size: 1.35rem;
+}
+
+.garage-tasks-header p {
+  margin: 4px 0 0;
+  color: var(--text-secondary, #666);
+  font-size: 0.9rem;
+}
+
+.garage-add-task-btn {
+  width: 46px;
+  height: 46px;
+
+  flex-shrink: 0;
+
+  border: none;
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: linear-gradient(
+    145deg,
+    #0aa35c,
+    #007a43
+  );
+
+  color: white;
+  font-size: 20px;
+
+  cursor: pointer;
+
+  box-shadow: 0 5px 14px rgba(0, 122, 67, 0.25);
+
+  transition: 0.2s ease;
+}
+
+.garage-add-task-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 7px 18px rgba(0, 122, 67, 0.3);
+}
+
+/* ========================================
+   TASK FORM
+======================================== */
+
+.garage-task-form {
+  background: var(--card-bg, #fff);
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 16px;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.garage-task-form input,
+.garage-task-form textarea,
+.garage-task-edit input,
+.garage-task-edit textarea {
+  width: 100%;
+  box-sizing: border-box;
+
+  padding: 12px;
+
+  border: 1px solid var(--border, #d1d5db);
+  border-radius: 10px;
+
+  background: var(--input-bg, #fff);
+  color: var(--text);
+
+  font-size: 15px;
+
+  margin-bottom: 10px;
+}
+
+.garage-task-form textarea,
+.garage-task-edit textarea {
+  min-height: 80px;
+  resize: vertical;
+  font-family: inherit;
+}
+
+.garage-task-form-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.task-save-btn,
+.task-cancel-btn {
+  flex: 1;
+
+  border: none;
+  border-radius: 12px;
+
+  padding: 12px;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.task-save-btn {
+  background: #e8f8ec;
+  color: #1d9b4b;
+}
+
+.task-save-btn:hover {
+  background: #1d9b4b;
+  color: white;
+}
+
+.task-cancel-btn {
+  background: #fdecec;
+  color: #d32f2f;
+}
+
+.task-cancel-btn:hover {
+  background: #d32f2f;
+  color: white;
+}
+
+/* ========================================
+   TASK LIST
+======================================== */
+
+.garage-task-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.garage-task {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  padding: 15px 16px;
+
+  background: #fff;
+  border-radius: 16px;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+
+  transition: 0.2s ease;
+}
+
+.garage-task:hover {
+  transform: translateY(-1px);
+}
+
+.garage-task-main {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  flex: 1;
+  min-width: 0;
+
+  cursor: pointer;
+}
+
+.garage-task-main input[type="checkbox"] {
+  width: 24px;
+  height: 24px;
+
+  flex-shrink: 0;
+
+  accent-color: #22c55e;
+  cursor: pointer;
+}
+
+.garage-task-main strong {
+  display: block;
+
+  color: var(--text);
+  font-size: 1rem;
+}
+
+.garage-task-main p {
+  margin: 4px 0 0;
+
+  color: var(--text-secondary, #666);
+  font-size: 0.9rem;
+}
+
+.garage-task.completed {
+  background: #dcfce7;
+}
+
+.garage-task.completed strong {
+  text-decoration: line-through;
+  color: #6b7280;
+}
+
+.garage-task.completed p {
+  color: #7c8a82;
+  text-decoration: line-through;
+}
+
+.garage-task-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  flex-shrink: 0;
+}
+
+.garage-no-tasks {
+  text-align: center;
+
+  padding: 20px 0;
+}
+
+.garage-no-tasks p {
+  margin-bottom: 15px;
+  color: var(--text-secondary, #666);
+}
+
+/* ========================================
+   TASK EDIT
+======================================== */
+
+.garage-task-edit {
+  width: 100%;
+}
+
+.garage-task-edit .garage-task-actions {
+  justify-content: flex-end;
+}
+
+/* ========================================
+   DARK MODE
+======================================== */
+
+html.theme-dark .garage-task {
+  background: #1c2523;
+  color: #f1f5f3;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+html.theme-dark .garage-task-main strong {
+  color: #f1f5f3;
+}
+
+html.theme-dark .garage-task-main p {
+  color: #b8c4c0;
+}
+
+html.theme-dark .garage-task.completed {
+  background: #24372d;
+}
+
+html.theme-dark .garage-task.completed strong {
+  color: #aebbb6;
+}
+
+html.theme-dark .garage-task.completed p {
+  color: #8e9b95;
+}
+
+html.theme-dark .garage-task-form {
+  background: #1c2523;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+html.theme-dark .garage-task-form input,
+html.theme-dark .garage-task-form textarea,
+html.theme-dark .garage-task-edit input,
+html.theme-dark .garage-task-edit textarea {
+  background: #111917;
+  border-color: #3a4541;
+  color: #f1f5f3;
+}
+
+html.theme-dark .garage-task-form input::placeholder,
+html.theme-dark .garage-task-form textarea::placeholder {
+  color: #8e9b95;
+}
