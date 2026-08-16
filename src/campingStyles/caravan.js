@@ -15,7 +15,6 @@
     "year",
     "crisNumber",
     "battery",
-    "waterPump",
     "miro",
     "mtplm",
     "payload",

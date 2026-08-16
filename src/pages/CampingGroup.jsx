@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import QRCode from "qrcode";
 import { useAuth } from "../auth/AuthProvider";
 import { useGroup } from "../auth/GroupProvider";
+import { FaRegTrashCan } from "react-icons/fa6";
 import {
   campingStyles,
   getCampingStyle,
@@ -301,13 +302,12 @@ function CampingGroup() {
             {isOwner &&
               member.uid !== user.uid && (
                 <button
-                  className="delete-btn"
-                  onClick={() =>
-                    removeMember(member)
-                  }
-                >
-                  Remove
-                </button>
+  className="delete-btn"
+  onClick={() => removeMember(member)}
+  aria-label={`Remove ${member.displayName || "member"}`}
+>
+  <FaRegTrashCan />
+</button>
               )}
           </div>
         ))}

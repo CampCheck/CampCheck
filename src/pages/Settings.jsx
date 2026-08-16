@@ -94,7 +94,7 @@ function Settings() {
   }
 
   return (
-    <div>
+  <div style={{ paddingBottom: 100 }}>
       <h1>Settings</h1>
 
       <p style={{ marginBottom: 20 }}>
