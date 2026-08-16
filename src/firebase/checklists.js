@@ -129,3 +129,32 @@ export async function initialiseChecklist(groupId, type, defaultItems) {
 
   await batch.commit();
 }
+export async function resetChecklist(
+  groupId,
+  type
+) {
+  const snapshot = await getDocs(
+    checklistRef(groupId, type)
+  );
+
+  const batch = writeBatch(db);
+
+  snapshot.docs.forEach((docSnap) => {
+    const item = docSnap.data();
+
+    if (item.checked === true) {
+      batch.update(
+        checklistDoc(
+          groupId,
+          type,
+          docSnap.id
+        ),
+        {
+          checked: false,
+        }
+      );
+    }
+  });
+
+  await batch.commit();
+}

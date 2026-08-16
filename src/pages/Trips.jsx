@@ -1,14 +1,24 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import JourneyBar from "../components/JourneyBar";
-import { FaMapMarkerAlt, FaCalendarAlt } from "react-icons/fa";
-import { subscribeTrips, deleteTrip as deleteTripFromFirestore } from "../firebase/trips";
+import { FaMapMarkerAlt, FaCalendarAlt, FaTrash } from "react-icons/fa";
+import { subscribeTrips, deleteTrip as deleteTripFromFirestore, updateTrip, } from "../firebase/trips";
+import { resetChecklist } from "../firebase/checklists";
+import {
+  updateTripNotes,
+  deleteTripNotes,
+} from "../firebase/tripNotes";
 import { useGroup } from "../auth/GroupProvider";
 
 function Trips() {
   const navigate = useNavigate();
   const { groupId } = useGroup();
   const [trips, setTrips] = useState([]);
+  const [editingNotesId, setEditingNotesId] =
+  useState(null);
+
+const [editingNotes, setEditingNotes] =
+  useState("");
   const today = new Date();
 today.setHours(0, 0, 0, 0);
 
@@ -29,15 +39,68 @@ const previousTrips = trips.filter(
     console.error
   );
 }, [groupId]);
+useEffect(() => {
+  if (!groupId || trips.length === 0) return;
 
-  function formatDate(date) {
-    return new Date(date).toLocaleDateString("en-GB", {
-      day: "numeric",
-      month: "short",
-      year: "numeric",
+  async function checkForFinishedTrip() {
+    const finishedTrip = trips.find((trip) => {
+      const departureDate = new Date(trip.departure);
+      departureDate.setHours(0, 0, 0, 0);
+
+      return (
+        departureDate < today &&
+        trip.checklistsReset !== true
+      );
     });
+
+    if (!finishedTrip) return;
+
+    console.log(
+      "Finished trip found - resetting checklists:",
+      finishedTrip
+    );
+
+    try {
+      await resetChecklist(
+        groupId,
+        "departure"
+      );
+
+      await resetChecklist(
+        groupId,
+        "arrival"
+      );
+
+      await updateTrip(
+        groupId,
+        finishedTrip.id,
+        {
+          checklistsReset: true,
+        }
+      );
+
+      console.log(
+        "Checklists successfully reset."
+      );
+    } catch (error) {
+      console.error(
+        "CHECKLIST RESET FAILED:",
+        error
+      );
+    }
   }
-  function daysUntil(date) {
+
+  checkForFinishedTrip();
+}, [groupId, trips]);
+function formatDate(date) {
+  return new Date(date).toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+}
+
+function daysUntil(date) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
@@ -45,19 +108,66 @@ const previousTrips = trips.filter(
   tripDate.setHours(0, 0, 0, 0);
 
   return Math.ceil(
-    (tripDate - today) / (1000 * 60 * 60 * 24)
+    (tripDate - today) /
+      (1000 * 60 * 60 * 24)
   );
 }
+
 async function deleteTrip(id) {
   if (!window.confirm("Delete this trip?")) return;
 
   try {
-    await deleteTripFromFirestore(groupId, id);
+    await deleteTripFromFirestore(
+      groupId,
+      id
+    );
   } catch (error) {
     console.error(error);
-    alert("Failed to delete trip. Please try again.");
+    alert(
+      "Failed to delete trip. Please try again."
+    );
   }
-}function getJourneyPosition(days) {
+}
+
+async function saveTripNotes(tripId) {
+  try {
+    await updateTripNotes(
+      groupId,
+      tripId,
+      editingNotes.trim()
+    );
+
+    setEditingNotesId(null);
+    setEditingNotes("");
+  } catch (error) {
+    console.error(error);
+    alert("Failed to save trip notes.");
+  }
+}
+
+async function removeTripNotes(tripId) {
+  if (
+    !window.confirm(
+      "Delete these trip notes?\n\nThis cannot be undone."
+    )
+  ) {
+    return;
+  }
+
+  try {
+    await deleteTripNotes(
+      groupId,
+      tripId
+    );
+
+    setEditingNotesId(null);
+    setEditingNotes("");
+  } catch (error) {
+    console.error(error);
+    alert("Failed to delete trip notes.");
+  }
+}
+function getJourneyPosition(days) {
   if (days <= 0) return 100;
   if (days <= 1) return 98;
   if (days <= 3) return 95;
@@ -69,10 +179,9 @@ async function deleteTrip(id) {
 
   return 0;
 }
- return (
-  <>
-    
 
+return (
+  <>
     <div className="dashboard trips-page">
       <div className="section-header-card">
   <span className="section-title">
@@ -133,7 +242,7 @@ async function deleteTrip(id) {
       )}
 {previousTrips.length > 0 && (
   <>
-    <div className="section-header-card">
+    <div className="section-header-card past-trips-header">
   <span className="section-title">
     Past Trips
   </span>
@@ -147,21 +256,120 @@ async function deleteTrip(id) {
   <div
     key={trip.id}
     className="card trip previous-trip"
-    style={{ marginBottom: "15px", opacity: 0.75 }}
   >
-    <h3 className="trip-campsite">{trip.campsite}</h3>
+    <h3 className="trip-campsite">
+      {trip.campsite}
+    </h3>
 
     <p>📍 {trip.town}</p>
 
     <p>
-      📅 {formatDate(trip.arrival)} – {formatDate(trip.departure)}
+      📅 {formatDate(trip.arrival)} –{" "}
+      {formatDate(trip.departure)}
     </p>
 
+    {/* TRIP NOTES */}
+
+    <div className="trip-notes">
+
+      <div className="trip-notes-header">
+        <strong>📝 Trip Notes</strong>
+
+        {editingNotesId !== trip.id && (
+  <div
+    style={{
+      display: "flex",
+      gap: "8px",
+    }}
+  >
+    <button
+      className="trip-notes-edit-btn"
+      onClick={() => {
+        setEditingNotesId(trip.id);
+        setEditingNotes(
+          trip.notes || ""
+        );
+      }}
+    >
+      Edit
+    </button>
+
+    {trip.notes && (
+      <button
+  className="delete-btn"
+  onClick={() =>
+    removeTripNotes(trip.id)
+  }
+  aria-label="Delete trip notes"
+>
+  <FaTrash />
+</button>
+    )}
+  </div>
+)}
+      </div>
+
+      {editingNotesId === trip.id ? (
+
+        <div className="trip-notes-editor">
+
+          <textarea
+            value={editingNotes}
+            onChange={(event) =>
+              setEditingNotes(
+                event.target.value
+              )
+            }
+            placeholder="Add notes about this stay..."
+            autoFocus
+          />
+
+          <div className="trip-notes-buttons">
+
+            <button
+              className="trip-notes-save"
+              onClick={() =>
+                saveTripNotes(trip.id)
+              }
+            >
+              Save
+            </button>
+
+            <button
+              className="trip-notes-cancel"
+              onClick={() => {
+                setEditingNotesId(null);
+                setEditingNotes("");
+              }}
+            >
+              Cancel
+            </button>
+
+          </div>
+
+        </div>
+
+      ) : (
+
+        <p className="trip-notes-text">
+          {trip.notes ||
+            "No notes added yet."}
+        </p>
+
+      )}
+
+    </div>
+
     <div className="trip-buttons">
-      <button onClick={() => deleteTrip(trip.id)}>
+      <button
+        onClick={() =>
+          deleteTrip(trip.id)
+        }
+      >
         Delete
       </button>
     </div>
+
   </div>
 ))}
   </>

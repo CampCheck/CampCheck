@@ -227,3 +227,140 @@
 
 
 
+/* ========================================
+   TRIP NOTES
+======================================== */
+
+.trip-notes {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border, #e5e7eb);
+}
+
+.trip-notes-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.trip-notes-header strong {
+  color: var(--text);
+}
+
+.trip-notes-edit-btn {
+  border: none;
+  border-radius: 10px;
+  padding: 8px 12px;
+
+  background: #eef6ff;
+  color: #0b7c7a;
+
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.trip-notes-text {
+  margin: 10px 0 0;
+  color: var(--text-secondary, #666);
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+.trip-notes-editor {
+  margin-top: 12px;
+}
+
+.trip-notes-editor textarea {
+  width: 100%;
+  min-height: 110px;
+  box-sizing: border-box;
+
+  padding: 12px;
+
+  border: 1px solid var(--border, #01ed34);
+  border-radius: 12px;
+
+  background: var(--input-bg, #fff);
+  color: var(--text);
+
+  font-family: inherit;
+  font-size: 15px;
+
+  resize: vertical;
+}
+
+.trip-notes-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.trip-notes-save,
+.trip-notes-cancel {
+  flex: 1;
+
+  border: none;
+  border-radius: 12px;
+
+  padding: 11px;
+
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.trip-notes-save {
+  background: #e8f8ec;
+  color: #1d9b4b;
+}
+
+.trip-notes-cancel {
+  background: #fdecec;
+  color: #d32f2f;
+}
+
+/* ========================================
+   DARK MODE
+======================================== */
+
+html.theme-dark .trip-notes {
+  border-color: #3a4541;
+}
+
+html.theme-dark .trip-notes-text {
+  color: #b8c4c0;
+}
+
+html.theme-dark .trip-notes-edit-btn {
+  background: #203335;
+  color: #64d8d2;
+}
+
+html.theme-dark .trip-notes-editor textarea {
+  background: #111917;
+  border-color: #3a4541;
+  color: #f1f5f3;
+}
+
+html.theme-dark .trip-notes-editor textarea::placeholder {
+  color: #8e9b95;
+}
+
+html.theme-dark .trip-notes-save {
+  background: #1f3a29;
+  color: #72d692;
+}
+
+html.theme-dark .trip-notes-cancel {
+  background: #3a2022;
+  color: #ff8f8f;
+}
+.previous-trip {
+  background: #e8f2eb;
+}
+.trips-page .card.trip.previous-trip {
+    background: #538eb6;
+}
+.trips-page .section-header-card.past-trips-header {
+    background: #538eb6 !important;
+}
