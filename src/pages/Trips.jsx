@@ -9,10 +9,12 @@ import {
   deleteTripNotes,
 } from "../firebase/tripNotes";
 import { useGroup } from "../auth/GroupProvider";
+import { getCampingStyle } from "../campingStyles";
 
 function Trips() {
   const navigate = useNavigate();
-  const { groupId } = useGroup();
+  const { groupId, campingStyle } = useGroup();
+const style = getCampingStyle(campingStyle);
   const [trips, setTrips] = useState([]);
   const [editingNotesId, setEditingNotesId] =
   useState(null);
@@ -55,21 +57,18 @@ useEffect(() => {
 
     if (!finishedTrip) return;
 
-    console.log(
-      "Finished trip found - resetting checklists:",
-      finishedTrip
-    );
+    
 
     try {
-      await resetChecklist(
+      await Promise.all(
+  Object.values(style.checklists).map(
+    (checklist) =>
+      resetChecklist(
         groupId,
-        "departure"
-      );
-
-      await resetChecklist(
-        groupId,
-        "arrival"
-      );
+        checklist.id
+      )
+  )
+);
 
       await updateTrip(
         groupId,
@@ -79,9 +78,7 @@ useEffect(() => {
         }
       );
 
-      console.log(
-        "Checklists successfully reset."
-      );
+      
     } catch (error) {
       console.error(
         "CHECKLIST RESET FAILED:",
