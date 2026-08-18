@@ -93,14 +93,22 @@ function Settings() {
     setShowAppearance(false);
   }
 
+  
   return (
-  <div style={{ paddingBottom: 100 }}>
-      <h1>Settings</h1>
+  <div className="dashboard" style={{ paddingBottom: 100 }}>
+      <div
+  className="dashboard-card"
+  style={{
+    marginBottom: 15,
+    background: "#63c5bc",
+  }}
+>
+  <h1>Settings</h1>
 
-      <p style={{ marginBottom: 20 }}>
-        Manage your CampCheck preferences.
-      </p>
-
+  <p style={{ marginTop: 4 }}>
+    Manage your CampCheck preferences.
+  </p>
+</div>
       {/* ACCOUNT */}
       <SettingRow
         title="Account"

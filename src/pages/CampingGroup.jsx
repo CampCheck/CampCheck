@@ -14,6 +14,7 @@ import {
   subscribeCampingGroup,
   subscribeGroupMembers,
   updateCampingStyle,
+  leaveCampingGroup,
 } from "../services/groupService";
 
 function CampingGroup() {
@@ -22,15 +23,14 @@ function CampingGroup() {
   const [group, setGroup] = useState(null);
   const [members, setMembers] = useState([]);
   const [qrCode, setQrCode] = useState("");
+  const [transferTarget, setTransferTarget] = useState("");
 
   const { user } = useAuth();
   const { groupId, campingStyle } = useGroup();
 
   const style = getCampingStyle(campingStyle);
 
-  const isOwner =
-    user?.uid === group?.owner ||
-    user?.uid === group?.createdBy;
+  const isOwner = user?.uid === group?.owner;
 
   useEffect(() => {
     if (!groupId) return undefined;
@@ -166,7 +166,65 @@ function CampingGroup() {
         )}`
       : "Offline";
   }
+async function transferOwnership() {
+  if (!transferTarget) {
+    alert("Please select a member.");
+    return;
+  }
 
+  const member = members.find(
+    (item) => item.uid === transferTarget
+  );
+
+  if (!member) return;
+
+  if (
+    !window.confirm(
+      `Transfer ownership of this camping group to ${
+        member.displayName || "this member"
+      }?\n\nYou will become a normal member of the group.`
+    )
+  ) {
+    return;
+  }
+
+  try {
+    await transferGroupOwnership(
+      groupId,
+      transferTarget
+    );
+
+    setTransferTarget("");
+
+    alert("Group ownership transferred.");
+  } catch (error) {
+    console.error(error);
+    alert("Unable to transfer group ownership.");
+  }
+}
+
+
+async function leaveGroup() {
+  if (
+    !window.confirm(
+      "Are you sure you want to leave this camping group?\n\nYou will need a new invite code to join it again."
+    )
+  ) {
+    return;
+  }
+
+  try {
+    await leaveCampingGroup(
+      groupId,
+      user.uid
+    );
+
+    navigate("/settings");
+  } catch (error) {
+    console.error(error);
+    alert("Unable to leave the camping group.");
+  }
+}
   return (
     <div className="shopping-page">
       <div className="shopping-title">
@@ -351,22 +409,79 @@ function CampingGroup() {
 
       {/* OTHER GROUP OPTIONS */}
       {isOwner && (
-        <div
-          className="dashboard-card"
-          style={{ marginBottom: 12 }}
-        >
-          <h3>Transfer Ownership</h3>
+  <div
+    className="dashboard-card"
+    style={{ marginBottom: 12 }}
+  >
+    <h3>Transfer Ownership</h3>
 
-          <p
-            style={{
-              marginTop: 4,
-              color: "#666",
-            }}
+    <p
+      style={{
+        marginTop: 4,
+        color: "#666",
+      }}
+    >
+      Transfer ownership of this camping group to another member.
+    </p>
+
+    <select
+      className="edit-input"
+      value={transferTarget}
+      onChange={(event) =>
+        setTransferTarget(event.target.value)
+      }
+      style={{ marginTop: 12 }}
+    >
+      <option value="">
+        Select a member
+      </option>
+
+      {members
+        .filter((member) => member.uid !== user.uid)
+        .map((member) => (
+          <option
+            key={member.uid}
+            value={member.uid}
           >
-            Coming soon
-          </p>
-        </div>
-      )}
+            {member.displayName || "Member"}
+          </option>
+        ))}
+    </select>
+
+    <button
+      className="add-checklist-btn"
+      onClick={transferOwnership}
+      disabled={!transferTarget}
+      style={{ marginTop: 12 }}
+    >
+      Transfer Ownership
+    </button>
+  </div>
+)}
+{/* LEAVE GROUP */}
+{!isOwner && (
+  <div
+    className="dashboard-card"
+    style={{
+      marginBottom: 12,
+      cursor: "pointer",
+    }}
+    onClick={leaveGroup}
+  >
+    <h3 style={{ color: "#d32f2f" }}>
+      Leave Group
+    </h3>
+
+    <p
+      style={{
+        marginTop: 4,
+        color: "#666",
+      }}
+    >
+      Leave this camping group
+    </p>
+  </div>
+)}
 
       {isOwner && (
         <div
@@ -393,20 +508,8 @@ function CampingGroup() {
         </div>
       )}
 
-      {/* LEAVE GROUP */}
-      <div className="dashboard-card">
-        <h3>Leave Group</h3>
-
-        <p
-          style={{
-            marginTop: 4,
-            color: "#666",
-          }}
-        >
-          Coming soon
-        </p>
-      </div>
-    </div>
+      
+</div>
   );
 }
 

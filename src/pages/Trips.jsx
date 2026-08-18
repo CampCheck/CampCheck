@@ -28,9 +28,13 @@ const upcomingTrips = trips.filter(
   (trip) => new Date(trip.departure) >= today
 );
 
-const previousTrips = trips.filter(
-  (trip) => new Date(trip.departure) < today
-);
+const previousTrips = trips
+  .filter((trip) => new Date(trip.departure) < today)
+  .sort(
+    (a, b) =>
+      new Date(b.departure) -
+      new Date(a.departure)
+  );
 
   useEffect(() => {
   if (!groupId) return;
