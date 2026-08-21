@@ -220,8 +220,8 @@
   transform: scaleX(1.7) scaleY(0.45);
 }
 
-.weather-rain,
-.weather-snow {
+.weather-scene .weather-rain,
+.weather-scene .weather-snow {
   position: absolute;
   inset: 185px 0 0 0;
 }
@@ -760,26 +760,41 @@
   font-size: 0.72rem;
 }
 /* ========================================
+
    WEATHER TILE - FINAL LAYOUT FIX
+
 ======================================== */
 
 .dashboard .card.weather {
+
   min-height: 0;
+
   height: auto;
+
   overflow: visible;
+
   box-sizing: border-box;
+
 }
 
 .dashboard .card.weather .weather-content {
+
   width: 100%;
+
   box-sizing: border-box;
+
 }
 
 .dashboard .card.weather .weather-current {
+
   padding-top: 0;
+
 }
 
 .dashboard .card.weather .weather-five-day {
+
   margin-top: 10px;
+
   padding-top: 10px;
+
 }

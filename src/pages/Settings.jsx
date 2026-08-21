@@ -6,16 +6,23 @@ import { useGroup } from "../auth/GroupProvider";
 import { subscribeGroupMembers } from "../services/groupService";
 import { useTheme } from "../theme/ThemeProvider";
 
-function SettingRow({ title, subtitle, danger = false, onClick }) {
+function SettingRow({
+  title,
+  subtitle,
+  danger = false,
+  onClick,
+  disabled = false,
+}) {
   return (
     <div
-      className="dashboard-card"
-      onClick={onClick}
-      style={{
-        cursor: onClick ? "pointer" : "default",
-        marginBottom: 12,
-      }}
-    >
+  className="dashboard-card"
+  onClick={disabled ? undefined : onClick}
+  style={{
+    cursor: disabled ? "default" : onClick ? "pointer" : "default",
+    marginBottom: 12,
+    opacity: disabled ? 0.5 : 1,
+  }}
+>
       <div
         style={{
           display: "flex",
@@ -140,14 +147,12 @@ function Settings() {
 
       {/* OTHER SETTINGS */}
       <SettingRow
-        title="Notifications"
-        subtitle="Trip, shopping and checklist reminders"
-      />
+  title="Notifications"
+  subtitle="Premium feature — coming soon"
+  disabled
+/>
 
-      <SettingRow
-        title="Backup & Sync"
-        subtitle="Cloud sync"
-      />
+      
 
       <SettingRow
   title="Rate CampCheck"
@@ -155,7 +160,7 @@ function Settings() {
   onClick={() => navigate("/settings/rate")}
 />
 
-      <SettingRow title="Report a Bug" />
+      
 
       <SettingRow
   title="Privacy Policy"
