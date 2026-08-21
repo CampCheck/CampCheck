@@ -39,35 +39,29 @@
 .garage-add-task-btn {
   width: 46px;
   height: 46px;
-
   flex-shrink: 0;
-
   border: none;
   border-radius: 50%;
-
   display: flex;
   align-items: center;
   justify-content: center;
 
   background: linear-gradient(
     145deg,
-    #0aa35c,
-    #007a43
+    #0ba7a0,
+    #007c79
   );
 
   color: white;
   font-size: 20px;
-
   cursor: pointer;
-
-  box-shadow: 0 5px 14px rgba(0, 122, 67, 0.25);
-
+  box-shadow: 0 5px 14px rgba(0, 110, 110, 0.25);
   transition: 0.2s ease;
 }
 
 .garage-add-task-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 7px 18px rgba(0, 122, 67, 0.3);
+  box-shadow: 0 7px 18px rgba(0, 110, 110, 0.3);
 }
 
 /* ========================================

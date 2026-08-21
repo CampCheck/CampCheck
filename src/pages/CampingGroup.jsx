@@ -4,6 +4,7 @@ import QRCode from "qrcode";
 import { useAuth } from "../auth/AuthProvider";
 import { useGroup } from "../auth/GroupProvider";
 import { FaRegTrashCan } from "react-icons/fa6";
+import ConfirmDialog from "../components/ConfirmDialog";
 import {
   campingStyles,
   getCampingStyle,
@@ -15,6 +16,7 @@ import {
   subscribeGroupMembers,
   updateCampingStyle,
   leaveCampingGroup,
+  deleteCampingGroup,
 } from "../services/groupService";
 
 function CampingGroup() {
@@ -31,6 +33,7 @@ function CampingGroup() {
   const style = getCampingStyle(campingStyle);
 
   const isOwner = user?.uid === group?.owner;
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   useEffect(() => {
     if (!groupId) return undefined;
@@ -200,6 +203,14 @@ async function transferOwnership() {
   } catch (error) {
     console.error(error);
     alert("Unable to transfer group ownership.");
+  }
+}
+async function handleDeleteGroup() {
+  try {
+    await deleteCampingGroup(groupId, user.uid);
+    setShowDeleteDialog(false);
+  } catch (error) {
+    console.error("Failed to delete group:", error);
   }
 }
 
@@ -484,31 +495,36 @@ async function leaveGroup() {
 )}
 
       {isOwner && (
-        <div
-          className="dashboard-card"
-          style={{ marginBottom: 12 }}
-          onClick={() =>
-            window.confirm(
-              "Deleting groups is not available yet."
-            )
-          }
-        >
-          <h3 style={{ color: "#d32f2f" }}>
-            Delete Group
-          </h3>
+  <div
+    className="dashboard-card"
+    style={{
+      marginBottom: 12,
+      cursor: "pointer",
+    }}
+    onClick={() => setShowDeleteDialog(true)}
+  >
+    <h3 style={{ color: "#d32f2f" }}>
+      Delete Group
+    </h3>
 
-          <p
-            style={{
-              marginTop: 4,
-              color: "#666",
-            }}
-          >
-            Coming soon — confirmation required
-          </p>
-        </div>
-      )}
+    <p
+      style={{
+        marginTop: 4,
+        color: "#666",
+      }}
+    >
+      Permanently delete this camping group.
+    </p>
+  </div>
+)}
 
-      
+<ConfirmDialog
+  open={showDeleteDialog}
+  message="Are you sure you want to delete this camping group? This cannot be undone."
+  onConfirm={handleDeleteGroup}
+  onCancel={() => setShowDeleteDialog(false)}
+/>
+
 </div>
   );
 }

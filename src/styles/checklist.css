@@ -91,7 +91,7 @@
     border-radius:14px;
     padding:14px;
 
-    background:linear-gradient(145deg,#0aa35c,#007a43);
+    background:linear-gradient(145deg,#0ba7a0,#007c79);
     color:#fff;
 
     font-size:1rem;
@@ -104,8 +104,9 @@
 
 .checklist-buttons button:hover{
     transform:translateY(-2px);
-    box-shadow:0 8px 18px rgba(0,122,67,.25);
+    box-shadow:0 8px 18px rgba(0,110,110,.25);
 }
+
 /* ========================================
    PROGRESS BAR
 ======================================== */
@@ -158,23 +159,75 @@
     gap:8px;
 }
 .add-checklist-btn{
+
     width:100%;
+
     padding:16px;
+
     border:none;
+
     border-radius:14px;
-    background:linear-gradient(145deg,#0aa35c,#007a43);
+
+    background:linear-gradient(145deg,#0ba7a0,#007c79);
+
     color:#fff;
+
     font-size:1rem;
+
     font-weight:700;
+
     cursor:pointer;
+
     transition:.2s ease;
+
     margin-bottom:20px;
+
 }
 
 .add-checklist-btn:hover{
+
     transform:translateY(-2px);
-    box-shadow:0 8px 18px rgba(0,122,67,.25);
+
+    box-shadow:0 8px 18px rgba(0,110,110,.25);
 }
+.checklist-add {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.checklist-add input {
+    flex: 1;
+    box-sizing: border-box;
+    padding: 14px 16px;
+    border: 1px solid #dbe3ef;
+    border-radius: 14px;
+    background: #fff;
+    color: var(--text);
+    font-size: 16px;
+    outline: none;
+}
+
+.checklist-add input::placeholder {
+    color: #91a4c2;
+}
+
+.checklist-add button {
+    border: none;
+    border-radius: 14px;
+    padding: 14px 20px;
+    background: linear-gradient(145deg, #0ba7a0 0%, #007c79 100%);
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.checklist-add button:hover {
+    transform: translateY(-1px);
+}
+
 .checklist-page {
     max-width: 620px;
     width: 100%;

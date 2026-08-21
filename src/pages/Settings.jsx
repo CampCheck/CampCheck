@@ -95,12 +95,20 @@ function Settings() {
 
   
   return (
-  <div className="dashboard" style={{ paddingBottom: 100 }}>
+  <div
+  className="container"
+  style={{
+    paddingBottom: 100,
+    maxWidth: 700,
+    margin: "0 auto",
+  }}
+>
       <div
   className="dashboard-card"
   style={{
     marginBottom: 15,
-    background: "#63c5bc",
+    background: "linear-gradient(145deg, #0ba7a0 0%, #007c79 100%)",
+    color: "white",
   }}
 >
   <h1>Settings</h1>

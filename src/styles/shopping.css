@@ -358,14 +358,13 @@
   font-weight: 600;
   color: #555;
 }
-
 .save-trip-btn {
   width: 100%;
   margin-top: 24px;
   padding: 14px;
   border: none;
   border-radius: 12px;
-  background: #16a34a;
+  background: linear-gradient(145deg, #0ba7a0 0%, #007c79 100%);
   color: white;
   font-size: 16px;
   font-weight: 600;
@@ -373,7 +372,7 @@
 }
 
 .save-trip-btn:hover {
-  background: #15803d;
+  background: linear-gradient(145deg, #09938d 0%, #006966 100%);
 }
 .shopping-top-buttons {
     display: flex;

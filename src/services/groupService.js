@@ -330,3 +330,44 @@ export async function leaveCampingGroup(
     { merge: true }
   );
 }
+export async function deleteCampingGroup(groupId, userId) {
+  const groupRef = doc(db, "campingGroups", groupId);
+
+  const membersRef = collection(
+    db,
+    "campingGroups",
+    groupId,
+    "members"
+  );
+
+  // Get all group members
+  const membersSnapshot = await getDocs(membersRef);
+
+  // Clear the group from every member's user profile
+  for (const member of membersSnapshot.docs) {
+    await setDoc(
+      doc(db, "users", member.id),
+      {
+        currentGroupId: null,
+      },
+      { merge: true }
+    );
+  }
+
+  // Delete every member from the group
+  for (const member of membersSnapshot.docs) {
+    await deleteDoc(member.ref);
+  }
+
+  // Delete the group itself
+  await deleteDoc(groupRef);
+
+  // Make absolutely sure the person who deleted it is cleared too
+  await setDoc(
+    doc(db, "users", userId),
+    {
+      currentGroupId: null,
+    },
+    { merge: true }
+  );
+}

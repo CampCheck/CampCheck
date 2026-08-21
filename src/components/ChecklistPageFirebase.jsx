@@ -140,53 +140,31 @@ return (
 
     <ProgressBar completed={completed} total={total} />
 
-    {showAddItem ? (
-      <div className="shopping-add" style={{ marginBottom: "20px" }}>
-        <input
-          type="text"
-          placeholder="Checklist item..."
-          value={newItem}
-          onChange={(e) => setNewItem(e.target.value)}
-          autoFocus
-        />
+   <div className="checklist-add">
+  <input
+    type="text"
+    placeholder="Add item..."
+    value={newItem}
+    onChange={(e) => setNewItem(e.target.value)}
+  />
 
-        <button
-  className="checklist-save-btn"
-  onClick={async () => {
-    if (!newItem.trim()) return;
+  <button
+    onClick={async () => {
+      if (!newItem.trim()) return;
 
-    await addChecklistItem(groupId, storageKey, {
-      text: newItem.trim(),
-      checked: false,
-      order: savedItems.length,
-      custom: true,
-    });
+      await addChecklistItem(groupId, storageKey, {
+        text: newItem.trim(),
+        checked: false,
+        order: savedItems.length,
+        custom: true,
+      });
 
-    setNewItem("");
-    setShowAddItem(false);
-  }}
->
-  Save
-</button>
-
-<button
-  className="checklist-cancel-btn"
-  onClick={() => {
-    setNewItem("");
-    setShowAddItem(false);
-  }}
->
-  Cancel
-</button>
-      </div>
-      ) : (
-        <button
-          className="add-checklist-btn"
-          onClick={() => setShowAddItem(true)}
-        >
-          ➕ Add Checklist Item
-        </button>
-      )}
+      setNewItem("");
+    }}
+  >
+    Add
+  </button>
+</div>
 
       <DndContext
         sensors={sensors}
@@ -219,9 +197,7 @@ return (
           Reset Checklist
         </button>
 
-        <Link to={backLink}>
-          <button>Back</button>
-        </Link>
+        
       </div>
 
       <ConfirmDialog
